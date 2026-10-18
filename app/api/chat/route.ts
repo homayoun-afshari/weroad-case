@@ -33,7 +33,8 @@ export async function POST(request: Request) {
   if (entries[entries.length - 1]?.kind !== "user") return bad("The chat must end with a user message.");
 
   try {
-    return Response.json(await runTurn({ model: getModel(), entries, onScreen: parsed.data.onScreen, abortSignal: request.signal }));
+    const { entries: added, page } = await runTurn({ model: getModel(), entries, onScreen: parsed.data.onScreen, abortSignal: request.signal });
+    return Response.json({ entries: added, page });
   } catch (error) {
     const failure = describeFailure(error, { aborted: request.signal.aborted });
     // A stop is not a failure: the user left, and nothing needs an answer or a log line
