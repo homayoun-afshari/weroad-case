@@ -18,6 +18,8 @@ export async function runTurn(options: {
   /** The ids of the trips on the page, in its order. */
   onScreen: number[];
   abortSignal?: AbortSignal;
+  /** How long the whole turn may take; the default is TURN_TIMEOUT_MS. */
+  timeoutMs?: number;
 }): Promise<TurnResponse> {
   const turn: TurnPage = { page: null, handOver: false };
   const result = await generateText({
@@ -27,7 +29,7 @@ export async function runTurn(options: {
     tools: createTools(turn, options.onScreen),
     // Offering a human agent ends the turn: the sentence written with the call is the message, and the page asks
     stopWhen: [isStepCount(MAX_STEPS), hasToolCall("hand_over")],
-    timeout: TURN_TIMEOUT_MS,
+    timeout: options.timeoutMs ?? TURN_TIMEOUT_MS,
     maxRetries: 1,
     abortSignal: options.abortSignal,
   });
