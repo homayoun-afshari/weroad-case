@@ -1,9 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  bookableDepartures,
   destinations,
   faqs,
-  fromPrice,
   isBookable,
   isUpcoming,
   isWaitingList,
@@ -56,22 +54,5 @@ describe("bookability", () => {
     const soldOut = departures.filter((d) => d.salesStatus === "SOLD_OUT");
     expect(soldOut.length).toBeGreaterThan(0);
     expect(soldOut.some(isBookable)).toBe(false);
-  });
-});
-
-describe("fromPrice", () => {
-  it("is the cheapest bookable departure, not the cheapest departure", () => {
-    for (const trip of trips) {
-      const prices = bookableDepartures(trip).map((d) => d.priceEur);
-      expect(fromPrice(trip)).toBe(Math.min(...prices));
-    }
-    const differs = trips.filter(
-      (t) => fromPrice(t) !== Math.min(...t.tours.map((d) => d.priceEur)),
-    );
-    expect(differs.length).toBeGreaterThan(0);
-  });
-
-  it("exists for every trip in the data", () => {
-    expect(trips.every((t) => fromPrice(t) !== null)).toBe(true);
   });
 });

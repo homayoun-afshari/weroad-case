@@ -63,3 +63,28 @@ export interface Faq {
   body: string;
   url: string;
 }
+
+/** What is being searched: the words and the filters, as the mock API reads them. */
+export interface SearchState {
+  /** Words left over after the translator took out the values it recognized. */
+  text: string;
+  /** A trip matches if its destination is any of them. Empty means any. */
+  destinations: string[];
+  /** A trip must have all of them. */
+  tripTypes: string[];
+  /** Departures lying fully inside the window (inclusive ISO dates). */
+  dates?: { from: string; to: string };
+  maxPrice?: number;
+  days?: { min?: number; max?: number };
+  ageBand?: AgeBand;
+  physicalRating?: PhysicalRating;
+  privateRoom?: boolean;
+}
+
+/** One trip found by the mock API, with the bookable departures that matched the departure filters. */
+export interface RawSearchResult {
+  trip: Trip;
+  departures: Departure[];
+  /** The cheapest of those departures. */
+  fromPrice: number;
+}

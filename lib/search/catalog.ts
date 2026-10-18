@@ -34,12 +34,6 @@ export function bookableDepartures(trip: Trip): Departure[] {
   return trip.tours.filter(isBookable);
 }
 
-/** The price shown for a trip: its cheapest bookable departure. */
-export function fromPrice(trip: Trip): number | null {
-  const prices = bookableDepartures(trip).map((d) => d.priceEur);
-  return prices.length ? Math.min(...prices) : null;
-}
-
 /** Destination names in the catalog, longest first so a longer name wins over a shorter one it contains. */
 export const destinations = [...new Set(trips.map((t) => t.destination))].sort(
   (a, b) => b.length - a.length || a.localeCompare(b),
