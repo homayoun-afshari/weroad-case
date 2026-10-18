@@ -10,12 +10,13 @@ const entry = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("tools"), messages: z.array(message) }),
   z.object({ kind: z.literal("page"), events: z.array(z.looseObject({})) }),
   z.object({ kind: z.literal("error"), text: z.string() }),
+  z.object({ kind: z.literal("handover"), answer: z.enum(["asked", "yes", "no"]) }),
 ]);
-const bodySchema = z.object({ entries: z.array(entry).max(200) });
+const bodySchema = z.object({ entries: z.array(entry).max(200), onScreen: z.array(z.number().int()).max(100) });
 
 const bad = (error: string) => Response.json({ error }, { status: 400 });
 
-/** One turn of the chat: the chat history in (the client holds it), the new entries and the page out. */
+/** One turn of the chat: the chat history and the trips on screen in (the client holds them), the new entries and the page out. */
 export async function POST(request: Request) {
   let body: unknown;
   try {
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
   if (entries[entries.length - 1]?.kind !== "user") return bad("The chat must end with a user message.");
 
   try {
-    return Response.json(await runTurn({ model: getModel(), entries, abortSignal: request.signal }));
+    return Response.json(await runTurn({ model: getModel(), entries, onScreen: parsed.data.onScreen, abortSignal: request.signal }));
   } catch (error) {
     console.error("chat turn failed", error);
     return Response.json({ error: "The assistant couldn't answer. Please try again." }, { status: 500 });

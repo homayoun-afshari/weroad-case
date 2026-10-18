@@ -171,6 +171,23 @@ button.primary {
   margin: 2px 0;
 }
 
+.messages li.handover {
+  align-self: stretch;
+  max-width: none;
+  background: #fff8e6;
+  border: 1px solid #e6d29a;
+}
+
+.messages li.handover p {
+  margin: 0;
+}
+
+.messages li.handover .choices {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
 .chat-input {
   display: flex;
   gap: 6px;

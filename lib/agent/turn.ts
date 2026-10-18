@@ -1,4 +1,4 @@
-import { generateText, isStepCount, type LanguageModel } from "ai";
+import { generateText, hasToolCall, isStepCount, type LanguageModel } from "ai";
 import { toModelMessages } from "@/lib/chat/history";
 import type { ChatEntry, TurnResponse } from "@/lib/chat/types";
 import { SYSTEM_PROMPT } from "./prompt";
@@ -15,15 +15,18 @@ export class TurnError extends Error {}
 export async function runTurn(options: {
   model: LanguageModel;
   entries: ChatEntry[];
+  /** The ids of the trips on the page, in its order. */
+  onScreen: number[];
   abortSignal?: AbortSignal;
 }): Promise<TurnResponse> {
-  const turn: TurnPage = { page: null };
+  const turn: TurnPage = { page: null, handOver: false };
   const result = await generateText({
     model: options.model,
     instructions: SYSTEM_PROMPT,
     messages: toModelMessages(options.entries),
-    tools: createTools(turn),
-    stopWhen: isStepCount(MAX_STEPS),
+    tools: createTools(turn, options.onScreen),
+    // Offering a human agent ends the turn: the sentence written with the call is the message, and the page asks
+    stopWhen: [isStepCount(MAX_STEPS), hasToolCall("hand_over")],
     timeout: TURN_TIMEOUT_MS,
     maxRetries: 1,
     abortSignal: options.abortSignal,
@@ -31,13 +34,20 @@ export async function runTurn(options: {
 
   // `result.response.messages` holds only the last step; the turn's messages are the steps' together
   const messages = result.steps.flatMap((step) => step.response.messages);
-  const text = result.text.trim();
-  if (!text || messages[messages.length - 1]?.role !== "assistant") {
-    throw new TurnError("The agent ended its turn without an answer.");
-  }
+  // The answer is the text of the last step that has any: after a tool the model sometimes ends with an
+  // empty step, having written its sentence together with the tool call
+  const written = result.steps.map((step) => step.text.trim()).filter(Boolean);
+  const text = written[written.length - 1] ?? "";
+  // A hand-over turn needs no sentence: the question is the proposal itself
+  if (!text && !turn.handOver) throw new TurnError("The agent ended its turn without an answer.");
 
+  // The final assistant message, when it is the answer, is shown rather than kept with the tool calls
+  const last = messages[messages.length - 1];
+  const answered = last?.role === "assistant" && result.steps[result.steps.length - 1].text.trim() === text;
   const entries: ChatEntry[] = [];
-  if (messages.length > 1) entries.push({ kind: "tools", messages: messages.slice(0, -1) });
-  entries.push({ kind: "assistant", text });
+  const kept = answered ? messages.slice(0, -1) : messages;
+  if (kept.length > 0) entries.push({ kind: "tools", messages: kept });
+  if (text) entries.push({ kind: "assistant", text });
+  if (turn.handOver) entries.push({ kind: "handover", answer: "asked" });
   return { entries, page: turn.page };
 }

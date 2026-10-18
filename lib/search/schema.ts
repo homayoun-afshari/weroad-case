@@ -25,3 +25,32 @@ export const searchRequestSchema = z.object({
   physicalRating: z.enum(["LOW", "MEDIUM", "HIGH"]).optional().describe("How physically demanding the trip is."),
   privateRoom: z.boolean().optional().describe("Only departures where a private room can be booked."),
 });
+
+/** The agent's get_departures tool: which trips on screen, and an optional date window. */
+export const departuresInputSchema = z
+  .object({
+    tripIds: z
+      .array(z.number().int())
+      .min(1)
+      .max(10)
+      .optional()
+      .describe("The trips to look at, by the # ids of the page state. Leave out for all the trips on screen."),
+    from: z.iso.date().optional().describe("The start of the date window (YYYY-MM-DD). Send with `to`, or leave both out."),
+    to: z.iso.date().optional().describe("The end of the date window (YYYY-MM-DD)."),
+  })
+  .refine((d) => (d.from === undefined) === (d.to === undefined), "Send both from and to, or neither.")
+  .refine((d) => d.from === undefined || d.to === undefined || d.from <= d.to, "The start date must not be after the end date.");
+
+/** The agent's get_faq tool: the destination the question is about, if any. */
+export const faqInputSchema = z.object({
+  destination: z
+    .string()
+    .max(60)
+    .optional()
+    .describe("The destination the question is about, as named in the page state (for example Iceland). Leave out for a general question."),
+});
+
+/** The agent's get_itinerary tool: which trip on screen. */
+export const itineraryInputSchema = z.object({
+  tripId: z.number().int().describe("The trip, by its # id in the page state."),
+});

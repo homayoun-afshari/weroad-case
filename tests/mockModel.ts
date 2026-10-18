@@ -21,6 +21,25 @@ export const textReply = (text: string) => ({
   warnings: [],
 });
 
+/** A model response that writes a sentence and calls a tool in the same step, as the real model often does. */
+export const sayAndCall = (text: string, toolName: string, input: unknown, toolCallId = "call-1") => ({
+  content: [
+    { type: "text" as const, text },
+    { type: "tool-call" as const, toolCallId, toolName, input: JSON.stringify(input) },
+  ],
+  finishReason: { unified: "tool-calls" as const, raw: undefined },
+  usage,
+  warnings: [],
+});
+
+/** A model response with nothing in it: after a tool result the real model sometimes ends like this. */
+export const emptyReply = () => ({
+  content: [],
+  finishReason: { unified: "stop" as const, raw: undefined },
+  usage,
+  warnings: [],
+});
+
 /** A model that gives these responses in order, one per call. */
-export const mockModel = (...responses: ReturnType<typeof toolCall | typeof textReply>[]) =>
+export const mockModel = (...responses: ReturnType<typeof toolCall | typeof textReply | typeof sayAndCall | typeof emptyReply>[]) =>
   new MockLanguageModelV4({ doGenerate: responses });
