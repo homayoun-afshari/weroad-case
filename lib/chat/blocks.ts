@@ -6,7 +6,7 @@ import type { PageEvent } from "./types";
 /** How many results the page state lists; the rest are counted, so a long list doesn't weigh on every turn. */
 const MAX_LISTED = 10;
 
-const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
+export const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
 
 function describeDays({ min, max }: { min?: number; max?: number }): string {
   if (min !== undefined && max !== undefined) return `${min} to ${max} days`;

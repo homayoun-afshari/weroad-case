@@ -2,7 +2,7 @@ import type { ModelMessage } from "ai";
 import { describe, expect, it } from "vitest";
 import { describeEvent, describeRequest, pageBlocks, pageStateBlock } from "@/lib/chat/blocks";
 import { searchEvent, undoEvent } from "@/lib/chat/events";
-import { addUserMessage, recordEvent, toModelMessages, userEntry } from "@/lib/chat/history";
+import { addUserMessage, recordEvent, toModelMessages, userEntry, withoutTrailingErrors } from "@/lib/chat/history";
 import type { ChatEntry } from "@/lib/chat/types";
 import { pageStateFor } from "@/lib/page/view";
 
@@ -188,5 +188,26 @@ describe("page change cards", () => {
     const messages = toModelMessages(entries);
     expect(messages).toHaveLength(1);
     expect(JSON.stringify(messages)).toContain("<page_events>");
+  });
+});
+
+describe("history sent for a turn", () => {
+  it("leaves out the errors after the user's message, so a retry can send it again", () => {
+    const entries: ChatEntry[] = [
+      { kind: "assistant", text: "Hi." },
+      userEntry("hello", [], northern),
+      { kind: "error", text: "failed" },
+      { kind: "error", text: "failed again" },
+    ];
+    expect(withoutTrailingErrors(entries)).toEqual(entries.slice(0, 2));
+  });
+
+  it("keeps errors that have a message after them", () => {
+    const entries: ChatEntry[] = [userEntry("a", [], northern), { kind: "error", text: "failed" }, userEntry("b", [], northern)];
+    expect(withoutTrailingErrors(entries)).toEqual(entries);
+  });
+
+  it("handles an empty history", () => {
+    expect(withoutTrailingErrors([])).toEqual([]);
   });
 });

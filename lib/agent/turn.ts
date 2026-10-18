@@ -1,7 +1,6 @@
 import { generateText, isStepCount, type LanguageModel } from "ai";
 import { toModelMessages } from "@/lib/chat/history";
-import type { ChatEntry } from "@/lib/chat/types";
-import type { PageState } from "@/lib/page/types";
+import type { ChatEntry, TurnResponse } from "@/lib/chat/types";
 import { SYSTEM_PROMPT } from "./prompt";
 import { createTools, type TurnPage } from "./tools";
 
@@ -12,19 +11,12 @@ export const TURN_TIMEOUT_MS = 30_000;
 /** The turn ended without an answer for the user (for example, the step limit came first). */
 export class TurnError extends Error {}
 
-export interface TurnResult {
-  /** To append to the chat history: the tool calls and results of the turn, then the assistant message. */
-  entries: ChatEntry[];
-  /** The page after the turn, when the agent searched. The client applies it as the assistant's change. */
-  page: PageState | null;
-}
-
 /** One turn: the chat history ends with a user message; the agent calls tools and writes its answer. */
 export async function runTurn(options: {
   model: LanguageModel;
   entries: ChatEntry[];
   abortSignal?: AbortSignal;
-}): Promise<TurnResult> {
+}): Promise<TurnResponse> {
   const turn: TurnPage = { page: null };
   const result = await generateText({
     model: options.model,

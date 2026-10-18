@@ -31,6 +31,15 @@ body {
   border-radius: 8px;
 }
 
+.controls fieldset {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
 .bar {
   display: flex;
   gap: 8px;
@@ -97,7 +106,9 @@ button.primary {
 }
 
 .chat {
-  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  height: 520px;
   margin-top: 20px;
   padding: 12px;
   background: #fff;
@@ -111,10 +122,13 @@ button.primary {
 }
 
 .messages {
-  display: grid;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
-  margin: 0;
+  margin: 0 0 12px;
   padding: 0;
+  overflow-y: auto;
   list-style: none;
 }
 
@@ -135,6 +149,36 @@ button.primary {
 .messages li.error {
   background: #fdecea;
   color: #7b1e14;
+}
+
+.messages li.thinking {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.messages li.card {
+  align-self: stretch;
+  max-width: none;
+  padding: 6px 10px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.messages li.card p {
+  margin: 2px 0;
+}
+
+.chat-input {
+  display: flex;
+  gap: 6px;
+}
+
+.chat-input input {
+  flex: 1;
+  min-width: 0;
 }
 
 .message-box {

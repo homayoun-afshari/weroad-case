@@ -22,6 +22,13 @@ export function addUserMessage(entries: ChatEntry[], text: string, page: PageSta
   return [...entries, userEntry(text, events, page)];
 }
 
+/** The history to send for a turn: the server needs it to end with the user's message, so the errors after it (a retry) are left out. */
+export function withoutTrailingErrors(entries: ChatEntry[]): ChatEntry[] {
+  let end = entries.length;
+  while (end > 0 && entries[end - 1].kind === "error") end--;
+  return entries.slice(0, end);
+}
+
 /**
  * The chat history as the model reads it. Errors stay in the history (to be counted and studied) but
  * are not sent, and neither are page cards: their events reach the model through the user message

@@ -1,5 +1,5 @@
 import type { ModelMessage } from "ai";
-import type { Source } from "@/lib/page/types";
+import type { PageState, Source } from "@/lib/page/types";
 import type { SearchRequest } from "@/lib/search/types";
 
 /** A change to the page that the agent didn't make. They are recorded as they happen, and emptied into the next user message. */
@@ -26,3 +26,11 @@ export type ChatEntry =
    */
   | { kind: "page"; events: PageEvent[] }
   | { kind: "error"; text: string };
+
+/** What a chat turn answers with. */
+export interface TurnResponse {
+  /** To append to the chat history: the tool calls and results of the turn, then the assistant message. */
+  entries: ChatEntry[];
+  /** The page after the turn, when the agent searched. The client applies it as the assistant's change. */
+  page: PageState | null;
+}
