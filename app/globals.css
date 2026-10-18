@@ -215,6 +215,12 @@ button.primary {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
+.message-box.warning {
+  border-color: #c99a1f;
+  background: #fff6dd;
+  color: #6b4e00;
+}
+
 .message-box > div {
   flex: 1;
 }
