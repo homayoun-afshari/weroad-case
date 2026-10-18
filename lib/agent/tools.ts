@@ -4,7 +4,8 @@ import type { PageState } from "@/lib/page/types";
 import { pageStateFor } from "@/lib/page/view";
 import { getDepartures } from "@/lib/search/departures";
 import { getFaq } from "@/lib/search/faq";
-import { departuresInputSchema, faqInputSchema, searchRequestSchema } from "@/lib/search/schema";
+import { getItinerary } from "@/lib/search/itinerary";
+import { departuresInputSchema, faqInputSchema, itineraryInputSchema, searchRequestSchema } from "@/lib/search/schema";
 import { z } from "zod";
 
 /** What the tools did to the page during a turn. */
@@ -19,7 +20,7 @@ export interface TurnPage {
  * The agent's tools. `search_trips` runs the search function inside the tool, in the same step, so
  * the page and the agent's answer come from the same results, and the page follows.
  * `hand_over` only marks that the question should be asked; the page asks it.
- * `get_departures` and `get_faq` only read: the departures of the trips on screen (`onScreen`, in the page's order), and the help-center articles.
+ * `get_departures`, `get_itinerary` and `get_faq` only read: the departures and the itinerary of the trips on screen (`onScreen`, in the page's order), and the help-center articles.
  */
 export function createTools(turn: TurnPage, onScreen: number[]) {
   return {
@@ -43,6 +44,12 @@ export function createTools(turn: TurnPage, onScreen: number[]) {
         "Reads WeRoad's help-center articles, and leaves the page as it is. Returns the general articles (payments, deposits, cancelling and refunds, flights, accommodation, rooms, the group, the Travel Group Leader, the \"Open to book\" status) and, when you name a destination, that destination's practical article (one topic per destination: currency, weather, internet and SIM, tipping or plugs). Use it for questions about how things work, not for dates and prices (get_departures) or for changing the search (search_trips). Answer only from the articles returned.",
       inputSchema: faqInputSchema,
       execute: (input) => getFaq(input),
+    }),
+    get_itinerary: tool({
+      description:
+        "Gets the day-by-day plan of one trip on screen (each day's title, where the group sleeps when the data says, and the highlights), and leaves the page as it is. Use it when the user asks what a trip includes or what happens on a day (\"What do we do on day 3 in Iceland?\"). Only trips on screen can be asked about.",
+      inputSchema: itineraryInputSchema,
+      execute: (input) => getItinerary({ ...input, onScreen }),
     }),
     hand_over: tool({
       description:

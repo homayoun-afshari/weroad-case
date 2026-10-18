@@ -49,3 +49,8 @@ export const faqInputSchema = z.object({
     .optional()
     .describe("The destination the question is about, as named in the page state (for example Iceland). Leave out for a general question."),
 });
+
+/** The agent's get_itinerary tool: which trip on screen. */
+export const itineraryInputSchema = z.object({
+  tripId: z.number().int().describe("The trip, by its # id in the page state."),
+});

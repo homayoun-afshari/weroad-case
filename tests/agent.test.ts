@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { SYSTEM_PROMPT } from "@/lib/agent/prompt";
 import { MAX_STEPS, runTurn, TurnError } from "@/lib/agent/turn";
 import { addUserMessage } from "@/lib/chat/history";
 import type { ChatEntry } from "@/lib/chat/types";
@@ -232,10 +233,70 @@ describe("a turn that can't answer", () => {
     expect(tools).toContain("hand_over");
     expect(tools).toContain("This ends your turn");
     const prompt = JSON.stringify(model.doGenerateCalls[0].prompt);
-    expect(prompt).toContain("When the user asks for a human agent, or you can't answer");
+    expect(prompt).toContain("They ask for a human agent, or you can't answer");
     expect(tools).toContain("when the user asks for one");
     expect(prompt).toContain("then call hand_over, which ends your turn");
     expect(prompt).toContain("don't point to other contact channels");
-    expect(prompt).toContain("don't call hand_over");
+  });
+});
+
+describe("which tool for what", () => {
+  const prompt = SYSTEM_PROMPT;
+
+  it("routes a change of WHAT to search_trips, with keep, change or drop", () => {
+    expect(prompt).toContain("They change WHAT they want");
+    expect(prompt).toContain("search_trips. Pass the complete new search request: keep what the user still wants");
+    expect(prompt).toContain("If the user undid one of your changes, don't propose it again");
+  });
+
+  it("routes a question of WHEN about the trips on screen to get_departures, and leaves the page alone", () => {
+    expect(prompt).toContain("They ask WHEN, or what it costs or how many seats are left, for the trips on screen");
+    expect(prompt).toContain("The page stays as it is");
+    expect(prompt).toContain('"I only have 19-24 October"');
+  });
+
+  it("says what to do when no trip on screen fits the dates: no search of its own, the nearest departures, an offer", () => {
+    expect(prompt).toContain("If no trip on screen fits the dates, don't search again on your own");
+    expect(prompt).toContain("give the nearest departures the tool returns and offer to look at all trips for those dates");
+    expect(prompt).toContain("If the user says yes, that changes what they want, so call search_trips");
+  });
+
+  it("routes the rest: the itinerary, the help center, a person, and what has nothing to do with WeRoad", () => {
+    expect(prompt).toContain("They ask what a trip includes, day by day: get_itinerary");
+    expect(prompt).toContain("They ask how things work");
+    expect(prompt).toContain("get_faq");
+    expect(prompt).toContain("The message has nothing to do with WeRoad: say you can't help with that here, and use no tool");
+  });
+
+  it("lets a departures answer list departures, and keeps the page's trips off the chat's lists", () => {
+    expect(prompt).toContain("Don't list the trips on the page again, because the page shows them");
+    expect(prompt).toContain("the departures that get_departures returns are the answer to a question about departures, so list those");
+  });
+
+  it("names every tool the agent has", async () => {
+    const model = mockModel(textReply("Hello."));
+    await runTurn({ model, onScreen, entries: asked("hello") });
+    const tools = JSON.stringify(model.doGenerateCalls[0].tools);
+    for (const name of ["search_trips", "get_departures", "get_itinerary", "get_faq", "hand_over"]) {
+      expect(tools).toContain(name);
+      expect(prompt).toContain(name);
+    }
+  });
+});
+
+describe("a turn that asks for an itinerary", () => {
+  it("reads the plan of a trip on screen and leaves the page alone", async () => {
+    const model = mockModel(toolCall("get_itinerary", { tripId: 9 }), textReply("Day 3 is the Golden Circle."));
+    const result = await runTurn({ model, onScreen, entries: asked("What do we do on day 3 in Iceland?") });
+    expect(result.page).toBeNull();
+    expect(result.entries.map((e) => e.kind)).toEqual(["tools", "assistant"]);
+    const second = JSON.stringify(model.doGenerateCalls[1].prompt);
+    expect(second).toContain("Golden Circle: Geysir, Gullfoss, Secret Lagoon");
+  });
+
+  it("tells the agent when the trip is not on screen", async () => {
+    const model = mockModel(toolCall("get_itinerary", { tripId: 3 }), textReply("That trip isn't on the page."));
+    await runTurn({ model, onScreen, entries: asked("and Morocco's plan?") });
+    expect(JSON.stringify(model.doGenerateCalls[1].prompt)).toContain("Trip 3 is not on the page.");
   });
 });
