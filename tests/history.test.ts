@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canUndo, createHistory, current, push, undo } from "@/lib/page/history";
+import { canUndo, createHistory, current, push, sameRequest, undo } from "@/lib/page/history";
 import type { PageState } from "@/lib/page/types";
 
 function page(text: string): PageState {
@@ -56,5 +56,21 @@ describe("page history", () => {
     push(history, page("c"), "assistant");
     undo(history);
     expect(JSON.stringify(history)).toBe(before);
+  });
+});
+
+describe("the same search again", () => {
+  it("is the same request whatever the order of its fields or its undefined ones", () => {
+    expect(sameRequest({ text: "a", maxPrice: 2000, dates: { from: "2026-10-19", to: "2026-10-24" } }, { dates: { to: "2026-10-24", from: "2026-10-19" }, maxPrice: 2000, text: "a" })).toBe(true);
+    expect(sameRequest({ text: "a", maxPrice: undefined }, { text: "a" })).toBe(true);
+    expect(sameRequest({ text: "a", maxPrice: 2000 }, { text: "a", maxPrice: 1500 })).toBe(false);
+    expect(sameRequest({ text: "a" }, { text: "b" })).toBe(false);
+  });
+
+  it("adds no step to the history: Undo would go back to the same page", () => {
+    const history = push(createHistory(page("a")), page("b"), "assistant");
+    expect(push(history, page("b"), "user")).toBe(history);
+    expect(history.entries).toHaveLength(2);
+    expect(undo(push(history, page("b"), "user"))!.reversed).toBe("assistant");
   });
 });
