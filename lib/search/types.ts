@@ -97,3 +97,14 @@ export interface RawSearchResult {
   /** The cheapest of those departures. */
   fromPrice: number;
 }
+
+/** One trip returned by a search, with the search state that found it. */
+export interface SearchResult extends RawSearchResult {
+  state: SearchState;
+}
+
+/** What the search function returns: the state read from the request, and the results. */
+export interface SearchOutput {
+  originalState: SearchState;
+  results: SearchResult[];
+}
