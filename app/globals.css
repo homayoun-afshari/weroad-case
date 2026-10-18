@@ -16,13 +16,19 @@ body {
   background: #fafafa;
 }
 
+/* The page is as tall as the window: the controls keep their height, the results and the chat share the rest and scroll inside */
 .app {
-  max-width: 960px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100dvh;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 16px;
 }
 
 .controls {
+  flex: none;
   display: grid;
   gap: 12px;
   padding: 12px;
@@ -49,28 +55,34 @@ body {
   flex: 1;
 }
 
+/* One row of fixed columns, so the controls keep their size whatever is typed in them */
 .filters {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1.3fr)) repeat(5, minmax(0, 1fr)) auto;
+  align-items: end;
   gap: 12px;
 }
 
 .filters label {
   display: grid;
   gap: 2px;
+  min-width: 0;
   font-size: 12px;
   color: var(--muted);
 }
 
+.filters input,
+.filters select {
+  width: 100%;
+  min-width: 0;
+}
+
 .filters label.check {
+  white-space: nowrap;
   align-self: end;
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.filters input[type="number"] {
-  width: 90px;
 }
 
 input,
@@ -98,18 +110,24 @@ button.primary {
   color: #fff;
 }
 
+/* Results and chat at two to one; each fills the height that is left */
 .layout {
+  flex: 1;
+  min-height: 0;
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: 2fr 1fr;
   gap: 16px;
-  align-items: start;
+}
+
+.layout > main {
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .chat {
   display: flex;
   flex-direction: column;
-  height: 520px;
-  margin-top: 20px;
+  min-height: 0;
   padding: 12px;
   background: #fff;
   border: 1px solid var(--border);
@@ -123,6 +141,7 @@ button.primary {
 
 .messages {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -138,6 +157,22 @@ button.primary {
   border-radius: 12px;
   background: #eef3f1;
   line-height: 1.4;
+}
+
+.messages li p {
+  margin: 0;
+}
+
+.messages li p + p,
+.messages li ul,
+.messages li ol {
+  margin-top: 6px;
+}
+
+.messages li ul,
+.messages li ol {
+  margin-bottom: 0;
+  padding-left: 20px;
 }
 
 .messages li.user {
@@ -237,15 +272,9 @@ button.primary {
   border-color: transparent;
 }
 
-@media (max-width: 800px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-}
-
 h2 {
   font-size: 16px;
-  margin: 20px 0 8px;
+  margin: 0 0 8px;
 }
 
 .results {
@@ -295,6 +324,29 @@ h2 {
 }
 
 .empty {
-  margin-top: 20px;
+  margin: 0;
   color: var(--muted);
+}
+
+/* A narrow window stacks the parts and the page scrolls as a whole */
+@media (max-width: 800px) {
+  .app {
+    height: auto;
+  }
+
+  .filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .layout > main {
+    overflow: visible;
+  }
+
+  .chat {
+    height: 520px;
+  }
 }
