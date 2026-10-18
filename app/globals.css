@@ -89,13 +89,60 @@ button.primary {
   color: #fff;
 }
 
-.error {
-  margin: 12px 0 0;
-  padding: 8px 12px;
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 16px;
+  align-items: start;
+}
+
+.chat {
+  display: grid;
+  place-items: center;
+  min-height: 320px;
+  margin-top: 20px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.message-box {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: start;
+  gap: 16px;
+  width: min(560px, calc(100% - 32px));
+  padding: 10px 12px;
   border: 1px solid #c0392b;
-  border-radius: 6px;
+  border-radius: 8px;
   background: #fdecea;
   color: #7b1e14;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.message-box > div {
+  flex: 1;
+}
+
+.message-box p {
+  margin: 2px 0 0;
+}
+
+.message-box button {
+  padding: 0 8px;
+  font-size: 18px;
+  line-height: 1.4;
+  background: transparent;
+  border-color: transparent;
+}
+
+@media (max-width: 800px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 h2 {

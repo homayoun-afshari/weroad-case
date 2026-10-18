@@ -1,24 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formToRequest, requestToForm, type FormValues } from "@/lib/page/form";
 import { canUndo, createHistory, current, push, undo } from "@/lib/page/history";
 import type { PageState } from "@/lib/page/types";
+import { ChatPanel } from "./ChatPanel";
+import { MESSAGE_BOX_MS, MessageBox, type Notice } from "./MessageBox";
 import { ResultsList } from "./ResultsList";
 import { SearchControls } from "./SearchControls";
 
-/** The whole screen: the search controls and the results list, driven by the page history. */
+/** The whole screen: the search controls, the results list, the chat and the message box. */
 export function SearchApp({ initial }: { initial: PageState }) {
   const [history, setHistory] = useState(() => createHistory(initial));
   const [form, setForm] = useState(() => requestToForm(initial.request));
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<Notice | null>(null);
 
   const page = current(history);
 
+  // The message box closes by itself; a new message starts the timer again
+  useEffect(() => {
+    if (!notice) return;
+    const timer = setTimeout(() => setNotice(null), MESSAGE_BOX_MS);
+    return () => clearTimeout(timer);
+  }, [notice]);
+
   async function onSearch() {
     setPending(true);
-    setError(null);
+    setNotice(null);
     try {
       const response = await fetch("/api/search", {
         method: "POST",
@@ -29,11 +38,11 @@ export function SearchApp({ initial }: { initial: PageState }) {
       if (!response.ok) throw new Error(body.error ?? "The search failed. Please try again.");
       setHistory((h) => push(h, body as PageState, "user"));
     } catch (e) {
-      setError(
+      const body =
         e instanceof TypeError
           ? "Couldn't reach the server. Check your connection and try again."
-          : (e as Error).message,
-      );
+          : (e as Error).message;
+      setNotice({ title: "Search failed", body });
     } finally {
       setPending(false);
     }
@@ -44,11 +53,10 @@ export function SearchApp({ initial }: { initial: PageState }) {
     if (!undone) return;
     setHistory(undone.history);
     setForm(requestToForm(current(undone.history).request));
-    setError(null);
   }
 
   return (
-    <main className="app">
+    <div className="app">
       <SearchControls
         form={form}
         onChange={(change: Partial<FormValues>) => setForm((f) => ({ ...f, ...change }))}
@@ -57,12 +65,13 @@ export function SearchApp({ initial }: { initial: PageState }) {
         canUndo={canUndo(history)}
         pending={pending}
       />
-      {error && (
-        <p role="alert" className="error">
-          {error}
-        </p>
-      )}
-      <ResultsList results={page.results} />
-    </main>
+      <div className="layout">
+        <main>
+          <ResultsList results={page.results} />
+        </main>
+        <ChatPanel />
+      </div>
+      {notice && <MessageBox notice={notice} onClose={() => setNotice(null)} />}
+    </div>
   );
 }
