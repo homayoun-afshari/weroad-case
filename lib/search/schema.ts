@@ -40,3 +40,12 @@ export const departuresInputSchema = z
   })
   .refine((d) => (d.from === undefined) === (d.to === undefined), "Send both from and to, or neither.")
   .refine((d) => d.from === undefined || d.to === undefined || d.from <= d.to, "The start date must not be after the end date.");
+
+/** The agent's get_faq tool: the destination the question is about, if any. */
+export const faqInputSchema = z.object({
+  destination: z
+    .string()
+    .max(60)
+    .optional()
+    .describe("The destination the question is about, as named in the page state (for example Iceland). Leave out for a general question."),
+});

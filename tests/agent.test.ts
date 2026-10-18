@@ -150,3 +150,32 @@ describe("a turn that asks for departures", () => {
     expect(second).toContain("Send both from and to");
   });
 });
+
+describe("a turn that asks the help center", () => {
+  it("reads the articles and leaves the page alone", async () => {
+    const model = mockModel(
+      toolCall("get_faq", { destination: "Iceland" }),
+      textReply("Iceland's weather is unpredictable."),
+    );
+    const result = await runTurn({ model, onScreen, entries: asked("What's the weather like in Iceland?") });
+
+    expect(result.page).toBeNull();
+    expect(result.entries.map((e) => e.kind)).toEqual(["tools", "assistant"]);
+    const second = JSON.stringify(model.doGenerateCalls[1].prompt);
+    expect(second).toContain("What’s the weather like in Iceland?");
+    expect(second).toContain("Are flights included?");
+  });
+
+  it("offers the tool next to the others, and tells the agent to answer only from the articles", async () => {
+    const model = mockModel(textReply("Hello."));
+    await runTurn({ model, onScreen, entries: asked("hello") });
+    expect(JSON.stringify(model.doGenerateCalls[0].tools)).toContain("get_faq");
+    expect(JSON.stringify(model.doGenerateCalls[0].prompt)).toContain("only from the articles get_faq returns");
+  });
+
+  it("tells the agent when the destination has no article", async () => {
+    const model = mockModel(toolCall("get_faq", { destination: "Sweden" }), textReply("I don't have that."));
+    await runTurn({ model, onScreen, entries: asked("What's the currency in Sweden?") });
+    expect(JSON.stringify(model.doGenerateCalls[1].prompt)).toContain("no help-center article for Sweden");
+  });
+});
