@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { formToRequest, requestToForm, type FormValues } from "@/lib/page/form";
+import { firstMessage } from "@/lib/chat/firstMessage";
+import type { ChatEntry } from "@/lib/chat/types";
 import { canUndo, createHistory, current, push, undo } from "@/lib/page/history";
 import type { PageState } from "@/lib/page/types";
 import { ChatPanel } from "./ChatPanel";
@@ -15,6 +17,7 @@ export function SearchApp({ initial }: { initial: PageState }) {
   const [form, setForm] = useState(() => requestToForm(initial.request));
   const [pending, setPending] = useState(false);
   const [notice, setNotice] = useState<Notice | null>(null);
+  const [entries, setEntries] = useState<ChatEntry[]>([]);
 
   const page = current(history);
 
@@ -55,6 +58,11 @@ export function SearchApp({ initial }: { initial: PageState }) {
     setForm(requestToForm(current(undone.history).request));
   }
 
+  /** Starting the chat: the first message is written by code from the page as it is now. */
+  function onStart() {
+    setEntries([{ kind: "assistant", text: firstMessage(page) }]);
+  }
+
   return (
     <div className="app">
       <SearchControls
@@ -69,7 +77,7 @@ export function SearchApp({ initial }: { initial: PageState }) {
         <main>
           <ResultsList results={page.results} />
         </main>
-        <ChatPanel />
+        <ChatPanel entries={entries} onStart={onStart} />
       </div>
       {notice && <MessageBox notice={notice} onClose={() => setNotice(null)} />}
     </div>

@@ -13,16 +13,22 @@ function describeDays({ min, max }: { min?: number; max?: number }): string {
   return min !== undefined ? `at least ${plural(min, "day")}` : `at most ${plural(max!, "day")}`;
 }
 
-/** The search request in words: `"northern lights" · max price €2,000`. */
-export function describeRequest(request: SearchRequest): string {
-  const parts = [request.text ? `"${request.text}"` : "no search text"];
+/** The filters that are set, in words: `max price €2,000`, `dates: 2026-12-01 to 2026-12-08`. */
+export function describeFilters(request: SearchRequest): string[] {
+  const parts: string[] = [];
   if (request.maxPrice !== undefined) parts.push(`max price ${formatPrice(request.maxPrice)}`);
   if (request.dates) parts.push(`dates: ${request.dates.from} to ${request.dates.to}`);
   if (request.days) parts.push(describeDays(request.days));
   if (request.ageBand) parts.push(`age band ${request.ageBand}`);
   if (request.physicalRating) parts.push(`physical effort ${request.physicalRating.toLowerCase()}`);
   if (request.privateRoom) parts.push("private room");
-  return parts.join(" · ");
+  return parts;
+}
+
+/** The search request in words: `"northern lights" · max price €2,000`. */
+export function describeRequest(request: SearchRequest): string {
+  const text = request.text ? `"${request.text}"` : "no search text";
+  return [text, ...describeFilters(request)].join(" · ");
 }
 
 export function describeEvent(event: PageEvent): string {

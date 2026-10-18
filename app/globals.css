@@ -97,13 +97,44 @@ button.primary {
 }
 
 .chat {
-  display: grid;
-  place-items: center;
   min-height: 320px;
   margin-top: 20px;
+  padding: 12px;
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 8px;
+}
+
+.chat.start {
+  display: grid;
+  place-items: center;
+}
+
+.messages {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.messages li {
+  max-width: 90%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #eef3f1;
+  line-height: 1.4;
+}
+
+.messages li.user {
+  justify-self: end;
+  background: var(--accent);
+  color: #fff;
+}
+
+.messages li.error {
+  background: #fdecea;
+  color: #7b1e14;
 }
 
 .message-box {
