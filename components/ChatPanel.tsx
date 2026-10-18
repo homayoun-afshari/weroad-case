@@ -8,14 +8,19 @@ interface Props {
   entries: ChatEntry[];
   /** A turn is running: "Thinking…" shows, and the input is locked. */
   thinking: boolean;
+  /** The hand-over question waits for an answer: the input stays locked until it has one. */
+  asking: boolean;
+  /** The user asked for a human agent: the chat is closed. */
+  frozen: boolean;
   onStart: () => void;
   onSend: (text: string) => void;
   onStop: () => void;
   onRetry: () => void;
+  onHandOver: (answer: "yes" | "no") => void;
 }
 
 /** The chat: the start button before it starts; after, the messages, the page cards, the input and the control buttons. */
-export function ChatPanel({ entries, thinking, onStart, onSend, onStop, onRetry }: Props) {
+export function ChatPanel({ entries, thinking, asking, frozen, onStart, onSend, onStop, onRetry, onHandOver }: Props) {
   const [draft, setDraft] = useState("");
   const list = useRef<HTMLOListElement>(null);
 
@@ -34,12 +39,18 @@ export function ChatPanel({ entries, thinking, onStart, onSend, onStop, onRetry 
     );
   }
 
-  const canRetry = !thinking && entries[entries.length - 1].kind === "error";
+  const locked = thinking || asking || frozen;
+  const canRetry = !thinking && !frozen && entries[entries.length - 1].kind === "error";
+  const placeholder = frozen
+    ? "This chat is closed"
+    : asking
+      ? "Yes or No above"
+      : "Ask about these trips…";
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
     const text = draft.trim();
-    if (!text || thinking) return;
+    if (!text || locked) return;
     setDraft("");
     onSend(text);
   };
@@ -58,6 +69,29 @@ export function ChatPanel({ entries, thinking, onStart, onSend, onStop, onRetry 
               </li>
             );
           }
+          if (entry.kind === "handover") {
+            return (
+              <li key={i} className="handover">
+                {entry.answer === "asked" ? (
+                  <>
+                    <p>Do you want to connect to a human agent?</p>
+                    <div className="choices">
+                      <button type="button" className="primary" onClick={() => onHandOver("yes")}>
+                        Yes
+                      </button>
+                      <button type="button" onClick={() => onHandOver("no")}>
+                        No
+                      </button>
+                    </div>
+                  </>
+                ) : entry.answer === "yes" ? (
+                  <p>You said yes to a human agent. This chat is closed.</p>
+                ) : (
+                  <p>You said no to a human agent.</p>
+                )}
+              </li>
+            );
+          }
           return (
             <li key={i} className={entry.kind}>
               {entry.text}
@@ -70,12 +104,12 @@ export function ChatPanel({ entries, thinking, onStart, onSend, onStop, onRetry 
         <input
           type="text"
           aria-label="Message"
-          placeholder="Ask about these trips…"
+          placeholder={placeholder}
           value={draft}
-          disabled={thinking}
+          disabled={locked}
           onChange={(e) => setDraft(e.target.value)}
         />
-        <button type="submit" className="primary" disabled={thinking || draft.trim() === ""}>
+        <button type="submit" className="primary" disabled={locked || draft.trim() === ""}>
           Send
         </button>
         <button type="button" aria-label="Stop" title="Stop" onClick={onStop} disabled={!thinking}>

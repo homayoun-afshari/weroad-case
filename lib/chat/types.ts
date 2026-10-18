@@ -31,6 +31,11 @@ export type ChatEntry =
    * directly; its events go into the `blocks` of the user message that follows.
    */
   | { kind: "page"; events: PageEvent[] }
+  /**
+   * The question "Do you want to connect to a human agent?", asked by the page when the agent can't
+   * answer. `asked` waits for the user; `yes` freezes the chat; `no` closes the question.
+   */
+  | { kind: "handover"; answer: "asked" | "yes" | "no" }
   | { kind: "error"; text: string };
 
 /** What a chat turn answers with. */

@@ -3,7 +3,7 @@ import { MAX_STEPS, runTurn, TurnError } from "@/lib/agent/turn";
 import { addUserMessage } from "@/lib/chat/history";
 import type { ChatEntry } from "@/lib/chat/types";
 import { pageStateFor } from "@/lib/page/view";
-import { mockModel, textReply, toolCall } from "./mockModel";
+import { emptyReply, mockModel, sayAndCall, textReply, toolCall } from "./mockModel";
 
 const northern = pageStateFor({ text: "northern lights" });
 const onScreen = northern.results.map((r) => r.tripId);
@@ -177,5 +177,65 @@ describe("a turn that asks the help center", () => {
     const model = mockModel(toolCall("get_faq", { destination: "Sweden" }), textReply("I don't have that."));
     await runTurn({ model, onScreen, entries: asked("What's the currency in Sweden?") });
     expect(JSON.stringify(model.doGenerateCalls[1].prompt)).toContain("no help-center article for Sweden");
+  });
+});
+
+describe("a turn that can't answer", () => {
+  it("offers a human agent, and that ends the turn with the sentence written with the call", async () => {
+    const model = mockModel(
+      toolCall("get_faq", {}),
+      sayAndCall("I don't have information about visas.", "hand_over", {}, "call-2"),
+      textReply("This is never asked for."),
+    );
+    const result = await runTurn({ model, onScreen, entries: asked("Do I need a visa?") });
+
+    expect(model.doGenerateCalls).toHaveLength(2); // no model call after hand_over
+    expect(result.entries.map((e) => e.kind)).toEqual(["tools", "assistant", "handover"]);
+    expect(result.entries[1]).toEqual({ kind: "assistant", text: "I don't have information about visas." });
+    expect(result.entries[2]).toEqual({ kind: "handover", answer: "asked" });
+    expect(result.page).toBeNull();
+    // the tool calls and results of the turn are kept for the next turn
+    const tools = result.entries[0];
+    expect(tools.kind === "tools" && tools.messages.map((m) => m.role)).toEqual(["assistant", "tool", "assistant", "tool"]);
+  });
+
+  it("shows only the question when the agent offered a human agent without a word: the question is the proposal", async () => {
+    const model = mockModel(toolCall("hand_over", {}));
+    const result = await runTurn({ model, onScreen, entries: asked("I want to talk to a person") });
+    expect(result.entries.map((e) => e.kind)).toEqual(["tools", "handover"]);
+    expect(result.entries[1]).toEqual({ kind: "handover", answer: "asked" });
+  });
+
+  it("shows the sentence written with a tool call when the model ends with an empty step", async () => {
+    // seen live: after a tool result the model sometimes ends with nothing, having written its sentence with the call
+    const model = mockModel(sayAndCall("Searching for Iceland.", "search_trips", { text: "iceland" }), emptyReply());
+    const result = await runTurn({ model, onScreen, entries: asked("just iceland") });
+    expect(result.entries.at(-1)).toEqual({ kind: "assistant", text: "Searching for Iceland." });
+    expect(result.page?.request.text).toBe("iceland");
+  });
+
+  it("fails when there is no sentence at all and no hand-over to carry the turn", async () => {
+    const model = mockModel(toolCall("search_trips", { text: "iceland" }), emptyReply());
+    await expect(runTurn({ model, onScreen, entries: asked("just iceland") })).rejects.toBeInstanceOf(TurnError);
+  });
+
+  it("asks nothing when the agent answers", async () => {
+    const model = mockModel(toolCall("get_faq", { destination: "Iceland" }), textReply("It is cold."));
+    const result = await runTurn({ model, onScreen, entries: asked("weather in Iceland?") });
+    expect(result.entries.some((e) => e.kind === "handover")).toBe(false);
+  });
+
+  it("is offered the tool, with the rule: one sentence, then the call; don't ask it yourself; no other channels", async () => {
+    const model = mockModel(textReply("Hello."));
+    await runTurn({ model, onScreen, entries: asked("hello") });
+    const tools = JSON.stringify(model.doGenerateCalls[0].tools);
+    expect(tools).toContain("hand_over");
+    expect(tools).toContain("This ends your turn");
+    const prompt = JSON.stringify(model.doGenerateCalls[0].prompt);
+    expect(prompt).toContain("When the user asks for a human agent, or you can't answer");
+    expect(tools).toContain("when the user asks for one");
+    expect(prompt).toContain("then call hand_over, which ends your turn");
+    expect(prompt).toContain("don't point to other contact channels");
+    expect(prompt).toContain("don't call hand_over");
   });
 });

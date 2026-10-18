@@ -32,7 +32,8 @@ export function withoutTrailingErrors(entries: ChatEntry[]): ChatEntry[] {
 /**
  * The chat history as the model reads it. Errors stay in the history (to be counted and studied) but
  * are not sent, and neither are page cards: their events reach the model through the user message
- * after them. The conversation starts at the first user message: the first assistant message is
+ * after them. A hand-over question is not sent either, except its "no" (a pending question locks the
+ * chat, and a "yes" closes it). The conversation starts at the first user message: the first assistant message is
  * written by code, and that user message already carries the page state it describes.
  */
 export function toModelMessages(entries: ChatEntry[]): ModelMessage[] {
@@ -46,6 +47,9 @@ export function toModelMessages(entries: ChatEntry[]): ModelMessage[] {
       messages.push({ role: "assistant", content: entry.text });
     } else if (entry.kind === "tools") {
       messages.push(...entry.messages);
+    } else if (entry.kind === "handover" && entry.answer === "no") {
+      // The user declined the offer; say so, or the agent may offer again
+      messages.push({ role: "user", content: "No, thank you. I don't want to connect to a human agent." });
     }
   }
   return messages;

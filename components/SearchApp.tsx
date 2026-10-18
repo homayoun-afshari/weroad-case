@@ -5,6 +5,7 @@ import { ChatError, isAbort, postTurn } from "@/lib/chat/client";
 import { reportedAfterSend, setDraft } from "@/lib/chat/controls";
 import { searchEvent, undoEvent } from "@/lib/chat/events";
 import { firstMessage } from "@/lib/chat/firstMessage";
+import { answerHandOver, isAsking, isFrozen } from "@/lib/chat/handover";
 import { addUserMessage, recordEvent, withoutTrailingErrors } from "@/lib/chat/history";
 import type { ChatEntry } from "@/lib/chat/types";
 import { formToRequest, isDirty, requestToForm, type FormValues } from "@/lib/page/form";
@@ -28,7 +29,9 @@ export function SearchApp({ initial }: { initial: PageState }) {
   const reported = useRef(false);
 
   const page = current(history);
-  const chatStarted = entries.length > 0;
+  const frozen = isFrozen(entries);
+  // A chat that has ended takes no more page events
+  const chatStarted = entries.length > 0 && !frozen;
   const dirty = isDirty(form, page.request);
 
   // The message box closes by itself; a new message starts the timer again
@@ -126,6 +129,11 @@ export function SearchApp({ initial }: { initial: PageState }) {
     }
   }
 
+  /** The user's answer to the hand-over question: yes closes the chat, no closes the question. */
+  function onHandOver(answer: "yes" | "no") {
+    setEntries((e) => answerHandOver(e, answer));
+  }
+
   function onSend(text: string) {
     reported.current = reportedAfterSend(entries, reported.current);
     const sent = addUserMessage(entries, text, page);
@@ -153,10 +161,13 @@ export function SearchApp({ initial }: { initial: PageState }) {
         <ChatPanel
           entries={entries}
           thinking={thinking}
+          asking={isAsking(entries)}
+          frozen={frozen}
           onStart={onStart}
           onSend={onSend}
           onStop={() => turn.current?.abort()}
           onRetry={() => void runTurn(entries)}
+          onHandOver={onHandOver}
         />
       </div>
       {notice && <MessageBox notice={notice} onClose={() => setNotice(null)} />}

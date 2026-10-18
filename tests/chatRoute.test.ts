@@ -36,6 +36,14 @@ describe("POST /api/chat", () => {
     expect((await post({ entries })).status).toBe(400); // no trips on screen given
   });
 
+  it("takes the hand-over question in the history, and rejects a wrong answer", async () => {
+    vi.mocked(getModel).mockReturnValue(mockModel(textReply("Sure.")));
+    const withQuestion = [...entries.slice(0, 1), { kind: "handover", answer: "no" }, ...entries.slice(1)];
+    expect((await post({ entries: withQuestion, onScreen: [9] })).status).toBe(200);
+    const wrong = [...entries.slice(0, 1), { kind: "handover", answer: "maybe" }, ...entries.slice(1)];
+    expect((await post({ entries: wrong, onScreen: [9] })).status).toBe(400);
+  });
+
   it("rejects a history that doesn't end with a user message", async () => {
     for (const bad of [[], [...entries, { kind: "assistant", text: "Done." }], [...entries, { kind: "error", text: "x" }]]) {
       const response = await post({ entries: bad, onScreen: [9] });

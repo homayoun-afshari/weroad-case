@@ -10,6 +10,7 @@ const entry = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("tools"), messages: z.array(message) }),
   z.object({ kind: z.literal("page"), events: z.array(z.looseObject({})) }),
   z.object({ kind: z.literal("error"), text: z.string() }),
+  z.object({ kind: z.literal("handover"), answer: z.enum(["asked", "yes", "no"]) }),
 ]);
 const bodySchema = z.object({ entries: z.array(entry).max(200), onScreen: z.array(z.number().int()).max(100) });
 
