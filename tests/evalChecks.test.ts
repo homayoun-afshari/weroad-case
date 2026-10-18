@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { amountsIn, datesIn, groundingSources, numbersIn, promisesHandOver, ungroundedFacts } from "@/evals/checks";
+import { amountsIn, datesIn, groundingSources, numbersIn, promisesHandOver, staleTripsNamed, ungroundedFacts } from "@/evals/checks";
 import { checkFaqAnswer, FAQ_CASES, type FaqCase } from "@/evals/faqCases";
 import { pageStateBlock } from "@/lib/chat/blocks";
 import { addUserMessage } from "@/lib/chat/history";
@@ -42,6 +42,9 @@ describe("reading prices and dates out of a text", () => {
     expect([...datesIn("31 October–6 November")].sort()).toEqual(["10-31", "11-06"]);
     expect([...datesIn("October 31st, Nov 6")].sort()).toEqual(["10-31", "11-06"]);
     expect([...datesIn("late September 2027, 5 days, 13 seats")]).toEqual([]);
+    // the end of a year is not the start of a range (seen live: "25 December 2026 and 5 January 2027")
+    expect([...datesIn("between 25 December 2026 and 5 January 2027")].sort()).toEqual(["01-05", "12-25"]);
+    expect([...datesIn("26 Dec 2026 to 1 Jan 2027")].sort()).toEqual(["01-01", "12-26"]);
   });
 });
 
@@ -97,6 +100,29 @@ describe("the strict check on prices and dates", () => {
 
   it("finds nothing to check in an answer without prices or dates", () => {
     expect(ungroundedFacts("Sure, one moment.", [])).toEqual({ prices: [], dates: [] });
+  });
+
+  it("allows today's date, which the system prompt states", () => {
+    const sources = groundingSources([first], turn("{}", "x"));
+    expect(ungroundedFacts("Today, 16 October, it leaves soon.", sources).dates).toEqual([]);
+  });
+});
+
+describe("the check for trips named after the search took them off the page", () => {
+  const before = pageStateFor({ text: "northern lights" });
+  const after = pageStateFor({ text: "cooking" });
+  const gone = before.results.filter((r) => !after.results.some((a) => a.tripId === r.tripId)).map((r) => r.destination)[0];
+
+  it("catches a destination that left the page", () => {
+    expect(staleTripsNamed(`${gone} is also lovely.`, before, after, "cooking classes")).toEqual([gone]);
+  });
+
+  it("lets the answer name a trip the user named", () => {
+    expect(staleTripsNamed(`${gone} is not shown now.`, before, after, `what about ${gone}?`)).toEqual([]);
+  });
+
+  it("finds nothing when no gone destination is named", () => {
+    expect(staleTripsNamed("Here are the cooking trips.", before, after, "cooking")).toEqual([]);
   });
 });
 

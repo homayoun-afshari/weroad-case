@@ -1,5 +1,7 @@
 import { pageStateBlock } from "@/lib/chat/blocks";
 import type { ChatEntry, TurnResponse } from "@/lib/chat/types";
+import type { PageState } from "@/lib/page/types";
+import { TODAY } from "@/lib/search/catalog";
 
 /**
  * Checks on what the assistant wrote, in code: no model judges them. The tests use them on answers
@@ -34,7 +36,7 @@ export function datesIn(text: string): Set<string> {
   };
   for (const [, , mm, dd] of text.matchAll(/(\d{4})-(\d{2})-(\d{2})/g)) days.add(`${mm}-${dd}`);
   // a range inside one month: "19-24 October", "20–27 October", "1 to 8 December"
-  for (const m of text.matchAll(new RegExp(String.raw`(\d{1,2})${ORDINAL}\s*(?:–|—|-|to|and)\s*(\d{1,2})${ORDINAL}\s+${MONTH}`, "gi"))) {
+  for (const m of text.matchAll(new RegExp(String.raw`(?<!\d)(\d{1,2})${ORDINAL}\s*(?:–|—|-|to|and)\s*(\d{1,2})${ORDINAL}\s+${MONTH}`, "gi"))) {
     add(m[3], m[1]);
     add(m[3], m[2]);
   }
@@ -77,7 +79,8 @@ const pageStateOf = (entry: ChatEntry | undefined) =>
 /**
  * What an answer may take a price or a date from (the strict rule): the page as it is **after** the
  * turn (the new page state when the agent searched, else the one the user message carried), what the
- * tools returned **this turn**, and the user's own words. Not the page state of an earlier turn.
+ * tools returned **this turn**, the user's own words, and today's date (the system prompt states
+ * it). Not the page state of an earlier turn.
  */
 export function groundingSources(history: ChatEntry[], response: TurnResponse): string[] {
   const last = history[history.length - 1];
@@ -90,7 +93,19 @@ export function groundingSources(history: ChatEntry[], response: TurnResponse): 
     last?.kind === "user" ? last.text : "",
     response.page ? pageStateBlock(response.page) : pageStateOf(last),
     ...toolResults,
+    `Today is ${TODAY}.`,
   ];
+}
+
+/**
+ * The trips an answer names although they are no longer on the page: they were there before the turn
+ * and the search took them away ("Sweden and Canada are now filtered out"). The page shows the list,
+ * and what it no longer shows is not what the user is looking at. A trip the user named is fine.
+ */
+export function staleTripsNamed(answer: string, before: PageState, after: PageState, userText: string): string[] {
+  const gone = before.results.filter((r) => !after.results.some((a) => a.tripId === r.tripId)).map((r) => r.destination);
+  const named = (text: string, destination: string) => new RegExp(String.raw`\b${destination}\b`, "i").test(text);
+  return [...new Set(gone)].filter((destination) => named(answer, destination) && !named(userText, destination));
 }
 
 /**
