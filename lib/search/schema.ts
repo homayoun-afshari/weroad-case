@@ -25,3 +25,18 @@ export const searchRequestSchema = z.object({
   physicalRating: z.enum(["LOW", "MEDIUM", "HIGH"]).optional().describe("How physically demanding the trip is."),
   privateRoom: z.boolean().optional().describe("Only departures where a private room can be booked."),
 });
+
+/** The agent's get_departures tool: which trips on screen, and an optional date window. */
+export const departuresInputSchema = z
+  .object({
+    tripIds: z
+      .array(z.number().int())
+      .min(1)
+      .max(10)
+      .optional()
+      .describe("The trips to look at, by the # ids of the page state. Leave out for all the trips on screen."),
+    from: z.iso.date().optional().describe("The start of the date window (YYYY-MM-DD). Send with `to`, or leave both out."),
+    to: z.iso.date().optional().describe("The end of the date window (YYYY-MM-DD)."),
+  })
+  .refine((d) => (d.from === undefined) === (d.to === undefined), "Send both from and to, or neither.")
+  .refine((d) => d.from === undefined || d.to === undefined || d.from <= d.to, "The start date must not be after the end date.");

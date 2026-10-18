@@ -6,6 +6,7 @@ import type { ChatEntry } from "@/lib/chat/types";
 import { pageStateFor } from "@/lib/page/view";
 
 const entries: ChatEntry[] = [{ kind: "user", text: "hello", blocks: "<page_state>…</page_state>" }];
+const onScreen = [9, 11, 41];
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status });
 
 afterEach(() => vi.unstubAllGlobals());
@@ -32,33 +33,33 @@ describe("asking for a turn", () => {
   it("sends the history and returns the new entries and the page", async () => {
     const fetchMock = vi.fn().mockResolvedValue(json({ entries: [{ kind: "assistant", text: "Hi!" }], page: null }));
     vi.stubGlobal("fetch", fetchMock);
-    const result = await postTurn(entries);
+    const result = await postTurn(entries, onScreen);
     expect(result).toEqual({ entries: [{ kind: "assistant", text: "Hi!" }], page: null });
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe("/api/chat");
-    expect(JSON.parse(init.body)).toEqual({ entries });
+    expect(JSON.parse(init.body)).toEqual({ entries, onScreen });
   });
 
   it("gives the server's message when the turn fails", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(json({ error: "The assistant couldn't answer. Please try again." }, 500)));
-    await expect(postTurn(entries)).rejects.toThrow("The assistant couldn't answer. Please try again.");
+    await expect(postTurn(entries, onScreen)).rejects.toThrow("The assistant couldn't answer. Please try again.");
   });
 
   it("gives a clear message when the answer is not JSON", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("<html>bad gateway</html>", { status: 502 })));
-    const error = await postTurn(entries).catch((e) => e);
+    const error = await postTurn(entries, onScreen).catch((e) => e);
     expect(error).toBeInstanceOf(ChatError);
     expect(error.message).toBe("The assistant couldn't answer. Please try again.");
   });
 
   it("says so when the server can't be reached", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("Failed to fetch")));
-    await expect(postTurn(entries)).rejects.toThrow("Couldn't reach the server.");
+    await expect(postTurn(entries, onScreen)).rejects.toThrow("Couldn't reach the server.");
   });
 
   it("lets a stop (an abort) through as an abort, not as a connection error", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new DOMException("aborted", "AbortError")));
-    const error = await postTurn(entries).catch((e) => e);
+    const error = await postTurn(entries, onScreen).catch((e) => e);
     expect(isAbort(error)).toBe(true);
     expect(error).not.toBeInstanceOf(ChatError);
   });
@@ -67,7 +68,7 @@ describe("asking for a turn", () => {
     const fetchMock = vi.fn().mockResolvedValue(json({ entries: [], page: null }));
     vi.stubGlobal("fetch", fetchMock);
     const controller = new AbortController();
-    await postTurn(entries, controller.signal);
+    await postTurn(entries, onScreen, controller.signal);
     expect(fetchMock.mock.calls[0][1].signal).toBe(controller.signal);
   });
 });

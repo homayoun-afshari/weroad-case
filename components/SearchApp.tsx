@@ -105,7 +105,7 @@ export function SearchApp({ initial }: { initial: PageState }) {
     turn.current = controller;
     setThinking(true);
     try {
-      const result = await postTurn(withoutTrailingErrors(sent), controller.signal);
+      const result = await postTurn(withoutTrailingErrors(sent), page.results.map((r) => r.tripId), controller.signal);
       setEntries((e) => [...e, ...result.entries]);
       if (result.page) {
         const next = result.page;

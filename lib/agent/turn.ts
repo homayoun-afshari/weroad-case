@@ -15,6 +15,8 @@ export class TurnError extends Error {}
 export async function runTurn(options: {
   model: LanguageModel;
   entries: ChatEntry[];
+  /** The ids of the trips on the page, in its order. */
+  onScreen: number[];
   abortSignal?: AbortSignal;
 }): Promise<TurnResponse> {
   const turn: TurnPage = { page: null };
@@ -22,7 +24,7 @@ export async function runTurn(options: {
     model: options.model,
     instructions: SYSTEM_PROMPT,
     messages: toModelMessages(options.entries),
-    tools: createTools(turn),
+    tools: createTools(turn, options.onScreen),
     stopWhen: isStepCount(MAX_STEPS),
     timeout: TURN_TIMEOUT_MS,
     maxRetries: 1,
