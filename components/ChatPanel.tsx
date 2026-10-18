@@ -3,6 +3,7 @@
 import { useEffect, useRef, type FormEvent } from "react";
 import { cardLine } from "@/lib/chat/cards";
 import type { ChatEntry } from "@/lib/chat/types";
+import { Markdown } from "./Markdown";
 
 interface Props {
   entries: ChatEntry[];
@@ -96,7 +97,7 @@ export function ChatPanel({ entries, draft, onDraft, thinking, asking, frozen, o
           }
           return (
             <li key={i} className={entry.kind}>
-              {entry.text}
+              {entry.kind === "assistant" ? <Markdown text={entry.text} /> : entry.text}
             </li>
           );
         })}
