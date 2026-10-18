@@ -35,7 +35,7 @@ const NORTHERN: SearchRequest = { text: "northern lights" };
 const ids = (o: Observation) => o.page?.results.map((r) => r.tripId) ?? [];
 const request = (o: Observation) => o.page?.request;
 const SAYS_NO_EXACT_MATCH =
-  /no exact|nothing matches|doesn't match|does not match|not an exact|no trip(?:s)? match|none (?:of them )?match|(?:didn't|did not|couldn't|could not) find an exact/i;
+  /no exact|nothing matches|doesn't match|does not match|not an exact|no (?:\w+\s+)?trips?\s+match|none (?:of them )?match|(?:didn't|did not|couldn't|could not) find an exact/i;
 
 export const CASES: EvalCase[] = [
   // The tool to use for what the user wants

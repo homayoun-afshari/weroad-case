@@ -113,12 +113,21 @@ describe("the check for trips named after the search took them off the page", ()
   const after = pageStateFor({ text: "cooking" });
   const gone = before.results.filter((r) => !after.results.some((a) => a.tripId === r.tripId)).map((r) => r.destination)[0];
 
-  it("catches a destination that left the page", () => {
-    expect(staleTripsNamed(`${gone} is also lovely.`, before, after, "cooking classes")).toEqual([gone]);
+  it("catches a destination that left the page and is priced", () => {
+    expect(staleTripsNamed(`${gone} (from €1,759) is also lovely.`, before, after, "cooking classes")).toEqual([gone]);
+    expect(staleTripsNamed(`Here are the cooking trips.\n- ${gone}: 7 days, €2,229`, before, after, "cooking classes")).toEqual([gone]);
+  });
+
+  it("does not count the user's own limit as a price (seen live: 'dropped off because they are above €1,500')", () => {
+    expect(staleTripsNamed(`${gone} dropped off because its price is above €1,500.`, before, after, "max 1,500")).toEqual([]);
+  });
+
+  it("lets the answer say which trips dropped off and why, without a price", () => {
+    expect(staleTripsNamed(`${gone} dropped off because it is above your limit. Cooking trips start from €719.`, before, after, "cooking classes")).toEqual([]);
   });
 
   it("lets the answer name a trip the user named", () => {
-    expect(staleTripsNamed(`${gone} is not shown now.`, before, after, `what about ${gone}?`)).toEqual([]);
+    expect(staleTripsNamed(`${gone} is not shown now, from €1,759.`, before, after, `what about ${gone}?`)).toEqual([]);
   });
 
   it("finds nothing when no gone destination is named", () => {
@@ -173,9 +182,11 @@ describe("help-center answers: what they say and must not", () => {
 
     const sweden = "I don't have a currency article for Sweden, so I can't tell you what currency it uses. Your Sweden trip's Travel Group Leader can help with practical questions like this before you travel.";
     expect(checkFaqAnswer(byId("currency-sweden"), sweden)).toHaveLength(1);
+  });
 
+  it("accepts PayPal or Revolut as the guarantee: article 4 says so, while article 7 says a card", () => {
     const guarantee = "If a departure is still \"Open to book\" and it's your first unconfirmed booking, you don't have to pay anything upfront. You only leave a credit card, PayPal, or Revolut as a guarantee, and the deposit is €/£/$0.";
-    expect(checkFaqAnswer(byId("unconfirmed-deposit"), guarantee)).toHaveLength(1);
+    expect(checkFaqAnswer(byId("unconfirmed-deposit"), guarantee)).toEqual([]);
   });
 
   it("catches an answer that makes up what the article doesn't say, and one that doesn't admit it", () => {
