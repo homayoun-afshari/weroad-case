@@ -1,0 +1,23 @@
+import type { ModelMessage } from "ai";
+import type { Source } from "@/lib/page/types";
+import type { SearchRequest } from "@/lib/search/types";
+
+/** A change to the page that the agent didn't make. They are recorded as they happen, and emptied into the next user message. */
+export type PageEvent =
+  /** The user pressed the search button. */
+  | { kind: "search"; request: SearchRequest; count: number }
+  /** The user pressed the undo button: what was undone, whose change it was, and where the page went back to. */
+  | { kind: "undo"; reversed: Source; undone: SearchRequest; restored: SearchRequest };
+
+/**
+ * The chat history, oldest first. Only user messages, assistant messages and errors appear in the chat;
+ * `tools` holds the tool calls and results of a turn, which the model needs on the next turn.
+ */
+export type ChatEntry =
+  /** `text` is what the user wrote and the chat shows; `blocks` is the page context the model reads before it. */
+  | { kind: "user"; text: string; blocks: string }
+  /** Written by the model, or by code (the first message). */
+  | { kind: "assistant"; text: string }
+  /** The assistant's tool calls and the tool results of one turn, as the AI SDK holds them. */
+  | { kind: "tools"; messages: ModelMessage[] }
+  | { kind: "error"; text: string };
