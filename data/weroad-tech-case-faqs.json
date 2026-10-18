@@ -1,0 +1,412 @@
+{
+ "market": "WE",
+ "site": "https://www.weroad.com",
+ "language": "en",
+ "currency": "EUR",
+ "exportedAt": "2026-10-16",
+ "notes": {
+  "faqs": "Public help-centre articles: 15 general ones plus one practical question per destination."
+ },
+ "faqs": [
+  {
+   "id": 1,
+   "scope": "general",
+   "destination": null,
+   "title": "Are flights included?",
+   "body": "Return international flights are not included on our trips because we want to give you full autonomy and flexibility. You can choose your preferred airline, fly from the airport that works best for you, and decide how many stopovers you want to make along the way.\nAs flights are not included, you also have more flexibility with your travel dates: you could arrive at your destination a few days early or return home a bit later – or even continue independently to a nearby destination!",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/9841189586194-Are-flights-included"
+  },
+  {
+   "id": 2,
+   "scope": "general",
+   "destination": null,
+   "title": "Can I modify my booking?",
+   "body": "Yes, you can change your trip directly from your MyWeRoad personal area, up to 31 days before departure. If you purchased Flexible Cancellation, to give you maximum flexibility, you may cancel your trip up to 8 days before departure and receive a refund, whatever the reason.\nHow to change your trip from MyWeRoad\n- Enter your booking\n- Scroll to the “Change your trip” section at the bottom right\n- Select a different date for the same trip or a completely different trip\nThings to know\nYou can change your trip up to 3 times from your MyWeRoad personal area. Further changes must be requested by contacting our team at hello@weroad.com.\nThe new trip must depart within 12 months from the original departure date.\nIf your original booking included a private room, Flexible Cancellation, discount codes, gift cards, or vouchers, we will notify you before confirmation if they cannot be applied to the new trip.\nYou cannot switch to sold-out trips. For “On request” departures, we will check availability. For “Last spots” departures, availability in rooms of your same gender may not be guaranteed.\nIf there is a price adjustment: if the new trip costs less, we will refund the difference; if it costs more, you will need to pay the difference.\nPLEASE NOTE: before cancelling, keep in mind that you can move your booking to another trip or a different date. Find out how!",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/34695580592914-Can-I-modify-my-booking"
+  },
+  {
+   "id": 3,
+   "scope": "general",
+   "destination": null,
+   "title": "What does €/£/$0 deposit mean?",
+   "body": "In some cases – for example when a departure is not yet confirmed and it is your first unconfirmed booking – you can book without paying the €/£/$100 deposit upfront.\nThis means that you can secure your spot at zero cost: nothing will be charged until the departure is confirmed. Once the departure is confirmed, the €/£/$100 deposit will be automatically charged within 48 hours according to the terms agreed at the time of booking.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/32662485255954-What-does-0-deposit-mean"
+  },
+  {
+   "id": 4,
+   "scope": "general",
+   "destination": null,
+   "title": "Can I cancel my booking?",
+   "body": "Yes, you can cancel on your own from MyWeRoad. If the tour is confirmed, amounts paid are non-refundable; if it is not confirmed, we refund everything you've paid. If your plans change, you can modify your trip free of charge up to 31 days before departure.\nHow cancellation works \nFor confirmed tours, fees paid are not refundable in cash. You can move your booking to another trip free of charge, up to 31 days before departure. After this deadline, changes are no longer possible.\nPlease note: if it's your first unconfirmed booking, you will only be asked to provide a credit card, PayPal, or Revolut as a guarantee, but nothing will be charged. From the second unconfirmed booking onwards, a mandatory £/$100 deposit will be required.\nTour not confirmed \nIf the tour is not yet confirmed and you cancel from MyWeRoad, we refund everything you've paid (excluding the cost of Flexible Cancellation, if you bought it). The same applies if WeRoad does not confirm the trip.\nFlexible Cancellation\nIf you purchased the Flexible Cancellation option (available in the first step of the booking process), you may cancel your trip up to 8 days before departure and receive a refund, whatever the reason. The only non-refundable amount is the cost of the Flexible Cancellation option itself.\nHow to cancel your trip \nGo to your MyWeRoad Personal Area, open the trip management section and choose the option to cancel your booking. Before confirming, you'll see whether a refund applies. For any questions, write to hello@weroad.com.\nPLEASE NOTE: before cancelling, keep in mind that you can move your booking to another trip or a different date. Find out how!",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/9843513780370-Can-I-cancel-my-booking"
+  },
+  {
+   "id": 5,
+   "scope": "general",
+   "destination": null,
+   "title": "What payment methods can I use?",
+   "body": "We offer several payment methods to fit every need:\n1. Credit or debit card (Visa, Mastercard, American Express);\n2. Instalment payment with Klarna (you’ll pay for the trip in three equal amounts);\n3. PayPal (for selected destinations);\n4. Revolut Pay to pay even faster straight from your Revolut account.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/10182255170194-What-payment-methods-can-I-use"
+  },
+  {
+   "id": 6,
+   "scope": "general",
+   "destination": null,
+   "title": "Can I find out my travel groups' flights?",
+   "body": "Yes, in two ways:\n1. From your personal area\nOnce you've booked, every WeRoader can add their flight details in their personal area, and the rest of the group can see them anonymously. Just log in, open your booking, and you'll find the section there. The more people fill it in, the easier it is for everyone to match up.\n2. From the trip messages\nEvery departure has its own message space on the WeRoad website: the best place to ask your future travel mates directly, or to read what they've already written.\nYou don't need to have booked to join in. If you're still deciding, you can already ask who's going, when, and on which flight. You can get there from the departures list, from the trip page, or from your personal area once you're logged in.\nYour Travel Coordinator is in the conversation too, so if you have a question about that specific departure, that's where you'll get an answer.\nAnd if you can't find what you're looking for, just write to us and we'll share whatever information we have.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/10182243241362-Can-I-find-out-my-travel-groups-flights"
+  },
+  {
+   "id": 7,
+   "scope": "general",
+   "destination": null,
+   "title": "What does the \"Open to book\" status mean?",
+   "body": "If a departure is “Open to book”, it means that the trip is not yet confirmed and we are waiting for a few more bookings… maybe yours!\nThe good news? If it’s your first booking on an unconfirmed departure, you can book without paying anything! Just. leave your credit card details as a guarantee: no immediate charge, €/£/$0 deposit.\nIn the meantime, wait for the departure to be confirmed before purchasing your round-trip flights!",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/31055433294610-What-does-the-Open-to-book-status-mean"
+  },
+  {
+   "id": 8,
+   "scope": "general",
+   "destination": null,
+   "title": "Can I get a refund if I cancel?",
+   "body": "It depends on when you cancel, the status of your departure, and how much you have already paid. \nHere are all the cases.\nIf the tour is not confirmed (at any time)\nYou can cancel directly from your MyWeRoad Personal Area, without contacting support (see the FAQ “Can I cancel my booking directly from MyWeRoad?”).\nIf it was your first unconfirmed booking, nothing has been charged: no refund is needed.\nIf you paid the €/£/$100 deposit, it is fully refunded. If you bought Flexible Cancellation, the cost of the option is not refunded. The deposit is also fully refunded if WeRoad does not confirm the tour.\nTour confirmed – you paid only the €/£/$100 deposit\nIn case of cancellation, the deposit paid is not refunded. However, you can change your trip from your MyWeRoad Account and use the amount for another departure.\nTour confirmed – you paid the full amount\nIn case of cancellation, the amount paid is not refunded. However, you can change your trip from your MyWeRoad Area and use the amount for another departure.\nIf you cancel within 31 days of departure – Tour confirmed\nYou can cancel your booking at any time. However, in case of cancellation within 31 days of departure, no refund of the amount paid is provided, nor is it possible to change your trip, unless you have purchased Flexible Cancellation.\nThe private room fee, included in the price of your trip, is not refunded under any circumstances within this time frame, unless you have purchased Flexible Cancellation.\nIf you have Flexible Cancellation\nWith Flexible Cancellation, you may cancel your trip up to 8 days before departure and receive a refund, whatever the reason. The only amount not refunded is the cost of the Flexible Cancellation option itself.\nPLEASE NOTE: before cancelling, keep in mind that you can move your booking to another trip or a different date. Find out how!\nFor any doubts about your specific situation, write to our team at hello@weroad.com: we'll help you!",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/34695469799826-Can-I-get-a-refund-if-I-cancel"
+  },
+  {
+   "id": 9,
+   "scope": "general",
+   "destination": null,
+   "title": "How is a group made up in average?",
+   "body": "Generally, our groups have an average of 11 people. Everyone on our trips speaks English, and travellers join us from across the US, UK, Europe and beyond. Our trips are open to travelers between 18 and 53 years old. The indicated age is meant to give you an idea of the type of group, but it's not a strict limit: it's possible to participate even with a few years more or less, as long as you can keep up with the pace and energy of the group you're traveling with.\nEach group will be joined and led by one of our experienced Group Leaders, who’s there to ensure everything runs smoothly and the group feels well-supported. \nIf you’d like to know more about our typical WeRoad groups do reach out to us on WhatsApp on +44 7716573700.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/24440097649554-How-is-a-group-made-up-in-average"
+  },
+  {
+   "id": 10,
+   "scope": "general",
+   "destination": null,
+   "title": "Can I see who’s in the group before I book the trip?",
+   "body": "Yes! If you're curious, you can take a sneak peek at the group before booking. \nYou’ll find the info in the ‘Group’ section for each trip on the departures page, showing how many WeRoaders have already booked. \nClick the little arrow and you’ll even see their gender and ages – but hey, that’s exclusive info, so we’ll ask you to log in or sign up to see that!",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/26855131148818-Can-I-see-who-s-in-the-group-before-I-book-the-trip"
+  },
+  {
+   "id": 11,
+   "scope": "general",
+   "destination": null,
+   "title": "What type of accommodation should I expect on your trips?",
+   "body": "For our trips we usually use locally owned accommodation instead of big hotel chains. It’s our favourite way to really experience the local culture and, whenever we can, support the local economy. Typically, you’ll stay in hotels, apartments, guesthouses and hostels with the same standard maintained across all trips in the same destination.\nThe list of accommodation for your trip will be shared with you by your Group Leader 2-5 days before departure, along with other useful details for your adventure!",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/10182240821266-What-type-of-accommodation-should-I-expect-on-your-trips"
+  },
+  {
+   "id": 12,
+   "scope": "general",
+   "destination": null,
+   "title": "If a location is mentioned, is it guaranteed that we’ll spend the night there?",
+   "body": "For some trips, in the itinerary section, you’ll find the number of nights and the location (not the hotel) where you’ll be spending the night(s). The location shown is the one we usually go for on most trips, but in some cases, you might stay in a nearby town. This will depend on logistics or availability of accommodation. \nThe list of accommodation for your trip (and therefore also the exact locations) will be shared by your Travel Group Leader 2-5 days before departure, along with other useful information for your adventure!",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28308749910162-If-a-location-is-mentioned-is-it-guaranteed-that-we-ll-spend-the-night-there"
+  },
+  {
+   "id": 13,
+   "scope": "general",
+   "destination": null,
+   "title": "Who is the Travel Group Leader and what is their role on the trip?",
+   "body": "The WeRoad Travel Group Leader is an experienced and skilled traveler who will be the perfect companion for your trip. They will manage all the logistical aspects of the itinerary like transport, timings, accommodation, restaurant bookings and meeting points, so that you can enjoy the trip without this hassle. They’re there to support the group, ensure everything runs smoothly and will no doubt make the trip a lot of fun along the way too! \nThe Group Leader will set up a WhatsApp group approximately 2 weeks before departure. This will be the moment to ask any pre-departure questions and get to know the rest of the group! If the trip you are interested in already has a Travel Group Leader assigned, you can contact them before booking. Their details will be on the trip page, or you can search for their name here. After booking, you will find their contact details in your My WeRoad account, under ‘Bookings and Trips’ > ‘Your Upcoming Trips’ > ‘Trip Details’.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/9843597909522-Who-is-the-Travel-Group-Leader-and-what-is-their-role-on-the-trip"
+  },
+  {
+   "id": 14,
+   "scope": "general",
+   "destination": null,
+   "title": "How can I be part of the WeRoad community?",
+   "body": "When you set off on a WeRoad trip, you’re officially a WeRoader – and as we often say, 'once a WeRoader, always a WeRoader'. This means that once you’re part of the community, a little piece of WeRoad will always stay with you.\nBut you’re not just a WeRoader during your trips, far from it! The community is alive and active all year round: you can stay in touch by following and interacting on our social media channels, like the Facebook group or the Instagram profile. You can also come along to one of our many events that we run in different cities worldwide. Check out and sign up to our events by downloading the WeMeet app here.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/23480598251154-How-can-I-be-part-of-the-WeRoad-community"
+  },
+  {
+   "id": 15,
+   "scope": "general",
+   "destination": null,
+   "title": "Will I be sharing a room?",
+   "body": "Yes, on all our trips you will share a room with other WeRoaders in your group. The bathroom will either be private or shared only with other travelers on the trip. The rooms might be twins, triples, quadruples or multi-share (up to 8 people in exceptional cases), depending on the destination and availability.\nYou will never share with people from outside of the WeRoad group, except in certain cases for local experiences, which are specifically mentioned in the itinerary or communicated before booking. These typically involve specific nights in unique accommodation like tents, homestays, or camping, offering a more adventurous travel experience in exchange for some comfort.\nDuring the booking process, you can also choose to stay in a mixed-gender room. If needed, only travelers who have opted in to this option may share a room with travel companions of a different gender.\nOn some of our trips we can offer a private room for an additional cost. Just tick the ‘Private Room’ option at checkout to get this added. For some of our trips if you book as two travelers together you can add this private room free of charge. Look out for this option at checkout. \nPlease note that if you do book a private room with a friend/partner this could be either a double or a twin room so please email hello@weroad.com if you have a preference on this.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/9840655300498-Will-I-be-sharing-a-room"
+  },
+  {
+   "id": 16,
+   "scope": "destination",
+   "destination": "Albania",
+   "title": "Which currency is used in Albania?",
+   "body": "The currency used in Albania is the Albanian Lek (ALL). You can exchange your currency at banks, exchange offices, and some hotels. It's a good idea to check the exchange rates before you go to get the best deal. Credit cards are accepted in larger cities and tourist areas, but it's handy to have some cash for smaller towns and markets.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381796343442-Which-currency-is-used-in-Albania"
+  },
+  {
+   "id": 17,
+   "scope": "destination",
+   "destination": "Argentina",
+   "title": "Which currency is used in Argentina?",
+   "body": "The currency used in Argentina is the Argentine Peso (ARS). The daily exchange rate can fluctuate, but as an example, 1 GBP might be around 350 ARS, 1 USD around 350 ARS, and 1 EUR around 370 ARS. It's best to check current rates before you travel. You can exchange currency at banks, official exchange offices called \"casas de cambio,\" or at some hotels.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381612378642-Which-currency-is-used-in-Argentina"
+  },
+  {
+   "id": 18,
+   "scope": "destination",
+   "destination": "Australia",
+   "title": "What’s the weather like in Australia?",
+   "body": "Australia's weather varies significantly depending on the region and season, so it's great to plan ahead:\n - \nNorthern Australia: Tropical climate with a wet season (November to April) and a dry season (May to October). Best time to visit is during the dry season for cooler temperatures and less humidity.\n - \nSouthern Australia: Temperate climate with four seasons. Summers (December to February) can be hot, while winters (June to August) are cooler and wetter. Spring (September to November) and autumn (March to May) are generally mild and pleasant.\n - \nCentral Australia: Desert climate with very hot summers and cooler winters. The best time to visit is during the cooler months from May to September.\nAlways check the specific region's forecast before you go!",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381631271442-What-s-the-weather-like-in-Australia"
+  },
+  {
+   "id": 19,
+   "scope": "destination",
+   "destination": "Bulgaria",
+   "title": "Which currency is used in Bulgaria?",
+   "body": "Bulgaria uses the Bulgarian Lev (BGN) as its currency. The daily exchange rates are approximately:\n - 1 GBP = 2.25 BGN\n - 1 USD = 1.85 BGN\n - 1 EUR = 1.95 BGN\nYou can exchange currency at banks, currency exchange offices, or withdraw BGN from ATMs.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/31750613789714-Which-currency-is-used-in-Bulgaria"
+  },
+  {
+   "id": 20,
+   "scope": "destination",
+   "destination": "Cabo Verde",
+   "title": "Which currency is used in Cabo Verde?",
+   "body": "In Cabo Verde, the currency used is the Cape Verdean Escudo (CVE). As of the latest rates:\n - 1 GBP is approximately 129 CVE\n - 1 USD is about 104 CVE\n - 1 EUR is roughly 110 CVE\nYou can exchange your money at banks or authorized exchange offices, which are available in larger towns and cities. Always check the latest exchange rates before you travel.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/31750658460818-Which-currency-is-used-in-Cabo-Verde"
+  },
+  {
+   "id": 21,
+   "scope": "destination",
+   "destination": "Canada",
+   "title": "What's the internet like in Canada? Should I buy a SIM card? How available is Wi-Fi?",
+   "body": "In Canada, Wi-Fi is widely available in most urban areas, including cafes, restaurants, hotels, and public spaces, making it easy to stay connected. However, if you plan to travel outside major cities or need reliable access on the go, buying a local SIM card or an e-SIM data plan is a great idea. Providers like Bell, Rogers, and Telus offer various options. You can purchase SIM cards at airports, convenience stores, or mobile provider outlets. This way, you'll have internet access wherever you roam across this vast country.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381666530322-What-s-the-internet-like-in-Canada-Should-I-buy-a-SIM-card-How-available-is-Wi-Fi"
+  },
+  {
+   "id": 22,
+   "scope": "destination",
+   "destination": "China",
+   "title": "Do I need to tip in China?",
+   "body": "Tipping is not a common practice in China and is often not expected. In most restaurants, hotels, and taxis, you won't need to tip. However, in some high-end places or those catering to international tourists, tips might be appreciated. If you feel the service was exceptional and you want to tip, a small token of appreciation is fine, but it is not necessary. Remember, if you do decide to tip, it’s always best to hand it directly to the person to ensure they receive it.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381667771410-Do-I-need-to-tip-in-China"
+  },
+  {
+   "id": 23,
+   "scope": "destination",
+   "destination": "Colombia",
+   "title": "What kind of plugs are used in Colombia?",
+   "body": "In Colombia, you'll find that they use Type A and Type B plugs. These are the same as those used in the US, with two flat parallel pins and sometimes an additional grounding pin. The electrical voltage is 110V, and the frequency is 60Hz. If your devices aren't compatible, bring a universal adapter to ensure you can charge and use your electronics smoothly.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381681160082-What-kind-of-plugs-are-used-in-Colombia"
+  },
+  {
+   "id": 24,
+   "scope": "destination",
+   "destination": "Costa Rica",
+   "title": "Which currency is used in Costa Rica?",
+   "body": "The currency in Costa Rica is the Costa Rican Colón. You can exchange your money at banks and currency exchange offices, which are commonly found in cities and tourist areas. Keep an eye out for currency exchange rates as they can vary.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381813814546-Which-currency-is-used-in-Costa-Rica"
+  },
+  {
+   "id": 25,
+   "scope": "destination",
+   "destination": "Croatia",
+   "title": "Which currency is used in Croatia?",
+   "body": "Croatia uses the Euro (EUR) as its currency. You can exchange your GBP, USD, or EUR at banks, exchange offices, or some hotels. It's a good idea to compare rates for the best deal. Keep an eye out for ATMs, which are widely available and often offer competitive exchange rates.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/31750759431442-Which-currency-is-used-in-Croatia"
+  },
+  {
+   "id": 26,
+   "scope": "destination",
+   "destination": "Denmark",
+   "title": "What’s the weather like in Denmark?",
+   "body": "Denmark has a temperate maritime climate, with mild winters and cool summers. Here’s what you can expect:\n - \nWinter (December to February): Cold and damp, with temperatures ranging from 0 to 5°C. It can snow, but it's not very common.\n - \nSpring (March to May): Gradually warming up, with temperatures between 5 to 15°C. This season can be quite rainy.\n - \nSummer (June to August): Pleasantly cool, with temperatures from 15 to 25°C. It's the sunniest time of the year, perfect for outdoor activities.\n - \nAutumn (September to November): Cool and windy, with temperatures dropping from 15 to 5°C. It gets rainier as the season progresses.\nThe best time to visit is in the summer, from June to August, when the weather is most favorable for exploring the country's many attractions.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381671286546-What-s-the-weather-like-in-Denmark"
+  },
+  {
+   "id": 27,
+   "scope": "destination",
+   "destination": "Dominican Republic",
+   "title": "Which currency is used in the Dominican Republic?",
+   "body": "The currency used in the Dominican Republic is the Dominican Peso (DOP). As of the latest rates:\n - 1 GBP is roughly 76 DOP\n - 1 USD is about 56 DOP\n - 1 EUR is approximately 66 DOP\nYou can exchange currency at banks, exchange offices, or at your hotel. It's a good idea to compare rates to get the best deal.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381638768786-Which-currency-is-used-in-the-Dominican-Republic"
+  },
+  {
+   "id": 28,
+   "scope": "destination",
+   "destination": "Ecuador",
+   "title": "Which currency is used in Ecuador?",
+   "body": "Ecuador uses the United States Dollar (USD) as its official currency. There is no need to exchange currency if you are bringing US Dollars. If you are carrying British Pounds (GBP) or Euros (EUR), you can exchange them at local banks or currency exchange offices. The exchange rates fluctuate, so it's a good idea to check the current rates before you go.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381684149394-Which-currency-is-used-in-Ecuador"
+  },
+  {
+   "id": 29,
+   "scope": "destination",
+   "destination": "Egypt",
+   "title": "What's the internet like in Egypt? Should I buy a SIM card? How available is Wi-Fi?",
+   "body": "In Egypt, you'll find that internet access is widely available in urban areas, with many hotels, cafes, and restaurants offering free Wi-Fi. However, the connection can sometimes be slow or unreliable. \nFor more consistent access, we recommend you get a local SIM card. These are affordable and can be purchased at the airport or from mobile providers. Just make sure your phone is unlocked before you travel. Keep in mind that outside major cities, internet coverage might be more limited.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381830675090-What-s-the-internet-like-in-Egypt-Should-I-buy-a-SIM-card-How-available-is-Wi-Fi"
+  },
+  {
+   "id": 30,
+   "scope": "destination",
+   "destination": "France",
+   "title": "Do I need to tip in France?",
+   "body": "Tipping in France is not obligatory since service charge is typically included in your bill at restaurants, cafes, and bars. However, if you receive exceptional service and want to show appreciation, you can leave a small tip. A few euros or rounding up the bill is common. For taxis, rounding up to the nearest euro or leaving a couple of euros as a tip is appreciated. In hotels, a euro or two for the porter or housekeeping is a nice gesture. Remember, tipping is always optional and based on your satisfaction with the service.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381723713554-Do-I-need-to-tip-in-France"
+  },
+  {
+   "id": 31,
+   "scope": "destination",
+   "destination": "Greece",
+   "title": "What kind of plugs are used in Greece?",
+   "body": "In Greece, the plugs used are Type C and Type F. Both types have two round pins. The standard voltage is 230 V, and the frequency is 50 Hz. \nIf your devices use a different plug type, we suggest you bring a universal adapter to stay connected without any hassle.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381692347026-What-kind-of-plugs-are-used-in-Greece"
+  },
+  {
+   "id": 32,
+   "scope": "destination",
+   "destination": "Guatemala",
+   "title": "Which currency is used in Guatemala?",
+   "body": "Guatemala uses the Guatemalan Quetzal as its currency. The exchange rates are approximately:\n - 1 GBP to 10 GTQ\n - 1 USD to 7.5 GTQ\n - 1 EUR to 8.5 GTQ\nYou can exchange your currency at banks, exchange bureaus, or at the airport in Guatemala. Always check for the latest rates before exchanging money.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381709556754-Which-currency-is-used-in-Guatemala"
+  },
+  {
+   "id": 33,
+   "scope": "destination",
+   "destination": "Hungary",
+   "title": "Which currency is used in Hungary?",
+   "body": "Hungary uses the Hungarian Forint (HUF) as its currency. The daily exchange rate can vary, but you can expect approximately:\n - 1 GBP to be around 425 HUF\n - 1 USD to be around 380 HUF\n - 1 EUR to be about 410 HUF\nYou can exchange currency at banks, exchange offices, and some hotels. It's also a good idea to compare rates and fees before making an exchange.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/31750792813586-Which-currency-is-used-in-Hungary"
+  },
+  {
+   "id": 34,
+   "scope": "destination",
+   "destination": "Iceland",
+   "title": "What’s the weather like in Iceland?",
+   "body": "Iceland's weather is famously unpredictable, but here's a general idea:\n- \nSouth Iceland: Mild winters and cool summers. Winter temperatures are around 0°C (32°F), while summers can reach 10-15°C (50-59°F).\n- \nNorth Iceland: Colder than the south. Winter temperatures can drop below -10°C (14°F), and summer temperatures are usually between 5-10°C (41-50°F).\n- \nHighlands: Harsh and cold, especially in winter. Often inaccessible during winter months due to snow.\nThe best time to visit is from June to August when the weather is milder, and you can enjoy the midnight sun. Always pack layers, as conditions can change rapidly.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381801751314-What-s-the-weather-like-in-Iceland"
+  },
+  {
+   "id": 35,
+   "scope": "destination",
+   "destination": "India",
+   "title": "Which currency is used in India?",
+   "body": "The currency in India is the Indian Rupee (INR). You can exchange your money at:\n - Banks\n - Airports\n - Currency exchange offices in major cities\nIt's a good idea to compare rates and fees to get the best deal.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381841621266-Which-currency-is-used-in-India"
+  },
+  {
+   "id": 36,
+   "scope": "destination",
+   "destination": "Indonesia",
+   "title": "Which currency is used in Indonesia?",
+   "body": "The currency in Indonesia is the Indonesian Rupiah (IDR). You can easily exchange your money at banks or authorized money changers in major cities. Keep an eye out for official exchange booths to ensure you get a fair rate.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381780799762-Which-currency-is-used-in-Indonesia"
+  },
+  {
+   "id": 37,
+   "scope": "destination",
+   "destination": "Ireland",
+   "title": "What's the internet like in Ireland? Should I buy a SIM card? How available is Wi-Fi?",
+   "body": "Ireland, being part of the EU, allows you to use your mobile data plan with roaming if you're from another EU country, which can be super convenient. However, if you're coming from outside the EU or need more data, buying a local SIM or an e-SIM data plan is a good idea. Providers like Vodafone, Three, and Eir offer various plans. Wi-Fi is widely available, especially in urban areas, with many cafes, restaurants, and hotels offering free Wi-Fi. Keep in mind that in more rural areas, Wi-Fi might be less accessible, so having a local SIM could be handy for staying connected.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381710380562-What-s-the-internet-like-in-Ireland-Should-I-buy-a-SIM-card-How-available-is-Wi-Fi"
+  },
+  {
+   "id": 38,
+   "scope": "destination",
+   "destination": "Italy",
+   "title": "Do I need to tip in Italy?",
+   "body": "In Italy, tipping is not as customary as in some other countries. Service charges are often included in your bill at restaurants, so there is no need to tip extra. However, if you receive exceptional service and want to show appreciation, leaving some small change or rounding up the bill is a nice gesture.\n- For taxis, rounding up to the nearest euro is common.\n- In hotels, giving a small tip to porters or housekeeping is appreciated but not expected.\nAlways remember tipping is entirely at your discretion.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381849843730-Do-I-need-to-tip-in-Italy"
+  },
+  {
+   "id": 39,
+   "scope": "destination",
+   "destination": "Japan",
+   "title": "What kind of plugs are used in Japan?",
+   "body": "In Japan, they use Type A and Type B plugs. Type A has two flat parallel pins, while Type B has the same two pins plus a grounding pin. The voltage is 100V with a frequency of 50-60Hz. You might need an adapter and possibly a voltage converter for your devices. Check your electronics to see if they are compatible with this voltage to avoid any issues.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381868451602-What-kind-of-plugs-are-used-in-Japan"
+  },
+  {
+   "id": 40,
+   "scope": "destination",
+   "destination": "Korea",
+   "title": "Which currency is used in Korea?",
+   "body": "The currency used in Korea is the South Korean Won (KRW). As of the latest rates:\n - 1 GBP is approximately 1,500 KRW\n - 1 USD is about 1,200 KRW\n - 1 EUR is around 1,300 KRW\nYou can exchange currency at banks, exchange kiosks at airports, and major hotels. Make sure to check the current rates as they can fluctuate.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381679747346-Which-currency-is-used-in-Korea"
+  },
+  {
+   "id": 41,
+   "scope": "destination",
+   "destination": "Kyrgyzstan",
+   "title": "Which currency is used in Kyrgyzstan?",
+   "body": "The currency used in Kyrgyzstan is the Kyrgyzstani Som (KGS). The exchange rate can vary, but as a rough guide:\n - 1 GBP is approximately 115 KGS\n - 1 USD is around 87 KGS\n - 1 EUR is about 100 KGS\nYou can exchange currency at banks, exchange offices, or at the airport for convenience.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381711755666-Which-currency-is-used-in-Kyrgyzstan"
+  },
+  {
+   "id": 42,
+   "scope": "destination",
+   "destination": "Latvia",
+   "title": "What’s the weather like in Latvia?",
+   "body": "Latvia has a temperate climate with distinct seasons, and the weather can vary depending on the region:\n - \nCoastal Areas: Mild summers and cool, windy winters. Summer temperatures range from 15 to 20°C, while winter can drop to -5°C.\n - \nInland: Warm summers with temperatures around 20 to 25°C, and cold winters with temperatures often below -10°C.\nThe best time to visit is during late spring (May to June) and early autumn (September) for pleasant weather and fewer crowds. Summer is also lovely, especially for outdoor activities. Winter can be quite cold, but it's perfect for enjoying the festive season and winter sports.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/31750805228050-What-s-the-weather-like-in-Latvia"
+  },
+  {
+   "id": 43,
+   "scope": "destination",
+   "destination": "Madagascar",
+   "title": "Which currency is used in Madagascar?",
+   "body": "The currency used in Madagascar is the Malagasy Ariary (MGA). As of the latest rates, 1 GBP is approximately 5,500 MGA, 1 USD is about 4,000 MGA, and 1 EUR is roughly 4,700 MGA. You can exchange currency at banks, hotels, and authorized currency exchange offices in major cities. Always keep some cash on hand, as card payments might not be widely accepted in rural areas.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/31972314269586-Which-currency-is-used-in-Madagascar"
+  },
+  {
+   "id": 44,
+   "scope": "destination",
+   "destination": "Maldives",
+   "title": "Which currency is used in the Maldives?",
+   "body": "The currency used in the Maldives is the Maldivian Rufiyaa (MVR). Here are the daily exchange rates:\n- 1 GBP is approximately 20 MVR\n- 1 USD is about 15 MVR\n- 1 EUR is around 17 MVR\nYou can exchange currency at banks, airport exchange counters, and major hotels in the Maldives.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381765408530-Which-currency-is-used-in-the-Maldives"
+  },
+  {
+   "id": 45,
+   "scope": "destination",
+   "destination": "Mexico",
+   "title": "What's the internet like in Mexico? Should I buy a SIM card? How available is Wi-Fi?",
+   "body": "In Mexico, it's a good idea to buy a local SIM card or an e-SIM data plan for reliable internet. Major providers like Telcel, Movistar, and AT&T offer plans with good coverage. \nWi-Fi is widely available in cities, hotels, cafes, and many public spaces, but connections can be slow or unreliable in rural areas. If you're planning to explore outside urban areas, a local SIM card will be very useful for staying connected.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381750500370-What-s-the-internet-like-in-Mexico-Should-I-buy-a-SIM-card-How-available-is-Wi-Fi"
+  },
+  {
+   "id": 46,
+   "scope": "destination",
+   "destination": "Morocco",
+   "title": "Do I need to tip in Morocco?",
+   "body": "Tipping is appreciated in Morocco and often expected for good service. In restaurants, it's common to leave around 10% of the bill as a tip. For smaller services, like taxis or porters, rounding up the fare or a small tip is appropriate. \nWhile tipping in Moroccan Dirhams is preferred, small amounts in Euros or Dollars are usually accepted too. If you're unsure, you can always ask locals for guidance on tipping practices.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381715725458-Do-I-need-to-tip-in-Morocco"
+  },
+  {
+   "id": 47,
+   "scope": "destination",
+   "destination": "Nepal",
+   "title": "What kind of plugs are used in Nepal?",
+   "body": "In Nepal, the standard voltage is 230 V and the frequency is 50 Hz. The plugs used are mostly Type C, D, and M. Since these are different from those used in many European countries and the USA, we suggest bringing a universal adapter to ensure your devices can be charged without any hiccups.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381720416786-What-kind-of-plugs-are-used-in-Nepal"
+  },
+  {
+   "id": 48,
+   "scope": "destination",
+   "destination": "Peru",
+   "title": "Which currency is used in Peru?",
+   "body": "Peru uses the Peruvian Sol (PEN) as its currency. The daily exchange rate can vary, but typically it's around:\n- 1 GBP to 5 PEN\n- 1 USD to 3.8 PEN\n- 1 EUR to 4 PEN\nYou can exchange currency at banks, exchange bureaus, and some hotels. For the best rates, we suggest you use official exchange bureaus or ATMs.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381754442898-Which-currency-is-used-in-Peru"
+  },
+  {
+   "id": 49,
+   "scope": "destination",
+   "destination": "Philippines",
+   "title": "Which currency is used in the Philippines?",
+   "body": "The currency used in the Philippines is the Philippine Peso (PHP). As of the latest rates:\n - 1 GBP is approximately 70 PHP\n - 1 USD is around 56 PHP\n - 1 EUR is about 60 PHP\nYou can exchange currency at airports, banks, and authorized money changers throughout the country. It's always a good idea to check current exchange rates before you travel.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/28381738201746-Which-currency-is-used-in-the-Philippines"
+  },
+  {
+   "id": 50,
+   "scope": "destination",
+   "destination": "Poland",
+   "title": "What’s the weather like in Poland?",
+   "body": "The weather in Poland can vary quite a bit depending on the region and time of year. Here's a general idea:\n - \nCoastal areas: Mild summers and winters, with some rain. Summer temperatures average around 20°C.\n - \nCentral Poland: Warm summers around 25°C, cold winters that often drop below freezing.\n - \nMountains: Cooler with more snow in winter, great for skiing.\n The best time to visit is late spring (May-June) and early autumn (September), when the weather is pleasant and crowds are smaller.",
+   "url": "https://weroadsupport-travel.zendesk.com/hc/en-gb/articles/31750948809618-What-s-the-weather-like-in-Poland"
+  }
+ ]
+}
