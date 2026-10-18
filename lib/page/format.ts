@@ -9,6 +9,17 @@ export function describeDays({ min, max }: { min?: number; max?: number }): stri
   return min !== undefined ? `at least ${plural(min, "day")}` : `at most ${plural(max!, "day")}`;
 }
 
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** "2026-10-20", "2026-10-27" → "20–27 Oct"; across months "31 Oct–6 Nov"; another year adds it: "28 Dec 2026–4 Jan 2027". */
+export function describeWindow(from: string, to: string): string {
+  const [fy, fm, fd] = from.split("-").map(Number);
+  const [ty, tm, td] = to.split("-").map(Number);
+  if (fy !== ty) return `${fd} ${MONTHS[fm - 1]} ${fy}–${td} ${MONTHS[tm - 1]} ${ty}`;
+  if (fm !== tm) return `${fd} ${MONTHS[fm - 1]}–${td} ${MONTHS[tm - 1]}`;
+  return fd === td ? `${fd} ${MONTHS[fm - 1]}` : `${fd}–${td} ${MONTHS[fm - 1]}`;
+}
+
 /** 1219 → "€1,219" */
 export function formatPrice(amount: number): string {
   return euros.format(amount);

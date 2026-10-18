@@ -98,25 +98,19 @@ export function groundingSources(history: ChatEntry[], response: TurnResponse): 
 }
 
 /**
- * The trips an answer names although they are no longer on the page: they were there before the turn
- * and the search took them away ("Sweden and Canada are now filtered out"). The page shows the list,
- * and what it no longer shows is not what the user is looking at. A trip the user named is fine.
+ * The trips an answer prices although they are no longer on the page: they were there before the turn
+ * and the search took them away ("Sweden (from €1,759) is now hidden"). Saying which trips dropped off
+ * and why is useful; a price beside one is the old page talking. A trip the user named is fine.
  */
 export function staleTripsNamed(answer: string, before: PageState, after: PageState, userText: string): string[] {
   const gone = before.results.filter((r) => !after.results.some((a) => a.tripId === r.tripId)).map((r) => r.destination);
   const named = (text: string, destination: string) => new RegExp(String.raw`\b${destination}\b`, "i").test(text);
-  return [...new Set(gone)].filter((destination) => named(answer, destination) && !named(userText, destination));
+  // priced: a sentence (or a list line) names the destination and states an amount the user didn't give ("above your €1,500 limit" is not a price)
+  const given = numbersIn(userText);
+  const priced = (destination: string) =>
+    answer.split(/[.!?\n]+/).some((part) => named(part, destination) && amountsIn(part).some((amount) => !given.has(amount)));
+  return [...new Set(gone)].filter((destination) => priced(destination) && !named(userText, destination));
 }
 
-/**
- * A sentence that promises the hand-over before the user has chosen: "I'll connect you with a human
- * agent". "Yes" only ends the chat, and nothing happens until the user answers, so the assistant may
- * offer a person but not promise one.
- */
-export function promisesHandOver(answer: string): boolean {
-  return [
-    /\bI(?:'ll| will)\s+(?:connect|pass|transfer|put|hand|route)\b/i,
-    /\bI(?:'m| am)\s+(?:connecting|passing|transferring|handing|putting)\b/i,
-    /\blet me\s+(?:connect|pass|transfer|do that|hand|put)\b/i,
-  ].some((pattern) => pattern.test(answer));
-}
+/** The promise check lives with the agent, which also uses it; the eval counts what it lets through. */
+export { promisesHandOver } from "@/lib/agent/promise";

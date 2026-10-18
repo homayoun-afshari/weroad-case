@@ -11,6 +11,8 @@ export interface ResultView {
   fromPrice: number;
   /** The search state that found this trip. */
   state: SearchState;
+  /** When the dates were loosened: the trip's bookable departure nearest to the dates that were asked. */
+  nearestDeparture?: { from: string; to: string };
 }
 
 /** The current search request, its original search state and the search results. */

@@ -2,6 +2,7 @@ import { generateText, hasToolCall, isStepCount, type LanguageModel } from "ai";
 import { toModelMessages } from "@/lib/chat/history";
 import type { ChatEntry, TurnResponse } from "@/lib/chat/types";
 import { SYSTEM_PROMPT } from "./prompt";
+import { HAND_OVER_OFFER, promisesHandOver } from "./promise";
 import { createTools, type TurnPage } from "./tools";
 
 /** A turn has a fixed maximum of model calls, so its cost and time are bounded. */
@@ -64,7 +65,8 @@ export async function runTurn(options: {
   const entries: ChatEntry[] = [];
   const kept = answered ? messages.slice(0, -1) : messages;
   if (kept.length > 0) entries.push({ kind: "tools", messages: kept });
-  if (text) entries.push({ kind: "assistant", text });
+  // The question card makes the offer, so a sentence that promises the connection is replaced (rule in code, not in the prompt)
+  if (text) entries.push({ kind: "assistant", text: turn.handOver && promisesHandOver(text) ? HAND_OVER_OFFER : text });
   if (turn.handOver) entries.push({ kind: "handover", answer: "asked" });
   const usage: TurnUsage = {
     inputTokens: result.totalUsage.inputTokens ?? 0,

@@ -42,8 +42,9 @@ export const FAQ_CASES: FaqCase[] = [
     question: "What happens if I book an unconfirmed departure? Do I have to pay?",
     // Article 7: a first booking on an unconfirmed departure needs no payment, a card as a guarantee
     mustSay: [/first\s+(?:unconfirmed\s+)?booking/i, /€\/£\/\$0|no(?:thing)?\s+(?:to pay|upfront|immediate)|without paying|pay(?:ing)?\s+(?:anything|nothing)|zero/i],
-    // The guarantee is a card in article 7; PayPal and Revolut are payment methods in article 5
-    mustNotSay: [/(?:paypal|revolut)[^.]*guarantee|guarantee[^.]*(?:paypal|revolut)/i],
+    // Nothing to forbid: article 7 says a card as a guarantee, article 4 says a card, PayPal or Revolut. The data
+    // disagrees with itself, so either answer is grounded
+    mustNotSay: [],
   },
   {
     id: "weather-iceland",

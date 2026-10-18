@@ -9,7 +9,7 @@ export const searchRequestSchema = z.object({
     .string()
     .max(200)
     .describe(
-      'What the user searches for, in plain words, including destinations: "hiking in Argentina", "northern lights". Not prices or dates, which have their own fields. Empty for all trips.',
+      'What the user searches for, in plain words, including destinations: "hiking in Argentina", "northern lights". Name a destination the way the page does: the country as WeRoad names it, not an abbreviation (write "United States", not "USA"). Not prices or dates, which have their own fields. Empty for all trips.',
     ),
   dates: z
     .object({ from: z.iso.date(), to: z.iso.date() })

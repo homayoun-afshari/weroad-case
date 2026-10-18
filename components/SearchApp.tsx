@@ -10,7 +10,7 @@ import { answerHandOver, isAsking, isFrozen } from "@/lib/chat/handover";
 import { addUserMessage, recordEvent, withoutTrailingErrors } from "@/lib/chat/history";
 import type { ChatEntry } from "@/lib/chat/types";
 import { formToRequest, isDirty, requestToForm, type FormValues } from "@/lib/page/form";
-import { canUndo, createHistory, current, push, undo } from "@/lib/page/history";
+import { canUndo, createHistory, current, push, sameRequest, undo } from "@/lib/page/history";
 import type { PageState } from "@/lib/page/types";
 import { ChatPanel } from "./ChatPanel";
 import { MESSAGE_BOX_MS, MessageBox, type Notice } from "./MessageBox";
@@ -62,6 +62,8 @@ export function SearchApp({ initial }: { initial: PageState }) {
       const body = await response.json();
       if (!response.ok) throw new Error(body.error ?? "The search failed. Please try again.");
       const next = body as PageState;
+      // The same search again changes nothing: no step to undo, no card, no warning
+      if (sameRequest(page.request, next.request)) return;
       setHistory((h) => push(h, next, "user"));
       // The search ran as usual; if a chat message was left unsent, say so (the draft stays)
       warnAboutDraft();

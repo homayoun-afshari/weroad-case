@@ -33,7 +33,7 @@ export interface Outcome {
   /** What went wrong, each line starting with its kind: tools, page, faq, promise, check. */
   failures: string[];
   ungrounded: Ungrounded;
-  /** Trips the answer names although the search took them off the page. */
+  /** Trips the answer prices although the search took them off the page. */
   stale: string[];
   review: boolean;
 }
@@ -153,7 +153,7 @@ export interface Summary {
   failuresByKind: Record<string, number>;
   /** Turns whose answer states a price or a day that this turn's sources don't. */
   ungroundedTurns: number;
-  /** Turns whose answer names a trip the search took off the page. */
+  /** Turns whose answer prices a trip the search took off the page. */
   staleTurns: number;
   promisesChecked: number;
   promises: number;
@@ -219,7 +219,7 @@ export function report(summary: Summary, outcomes: Outcome[], runs: number): str
   out.push(`- errors: ${summary.errors.total} ${JSON.stringify(summary.errors.byStatus)}`);
   out.push(`- failures by kind (turns): ${JSON.stringify(summary.failuresByKind)}`);
   out.push(`- answers stating a price or a day no source states: ${summary.ungroundedTurns}`);
-  out.push(`- answers naming a trip the search took off the page: ${summary.staleTurns}`);
+  out.push(`- answers pricing a trip the search took off the page: ${summary.staleTurns}`);
   out.push(`- promises of a connection: ${summary.promises} of ${summary.promisesChecked} hand-over turns`);
   out.push(`- tokens in/out/reasoning: ${summary.tokens.inputTokens}/${summary.tokens.outputTokens}/${summary.tokens.reasoningTokens}`);
   out.push(`- estimated cost: $${summary.cost.toFixed(4)}; latency mean ${summary.latency.meanMs} ms, max ${summary.latency.maxMs} ms`, "");
@@ -229,7 +229,7 @@ export function report(summary: Summary, outcomes: Outcome[], runs: number): str
   for (const o of outcomes.filter((x) => x.ungrounded.prices.length || x.ungrounded.dates.length)) {
     out.push(`- ${line(o)} prices ${JSON.stringify(o.ungrounded.prices)} days ${JSON.stringify(o.ungrounded.dates)}: ${oneLine(o.observation?.answer ?? "")}`);
   }
-  out.push("", "## Answers naming a trip that left the page", "");
+  out.push("", "## Answers pricing a trip that left the page", "");
   for (const o of outcomes.filter((x) => x.stale.length)) out.push(`- ${line(o)} ${JSON.stringify(o.stale)}: ${oneLine(o.observation?.answer ?? "")}`);
   out.push("", "## Answers to read (the kinds of error with no check)", "");
   for (const o of outcomes.filter((x) => x.review && x.observation)) out.push(`- ${line(o)} "${o.say}": ${oneLine(o.observation!.answer)}`);
