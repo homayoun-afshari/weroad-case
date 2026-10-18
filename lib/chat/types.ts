@@ -5,7 +5,7 @@ import type { SearchRequest } from "@/lib/search/types";
 /** A change to the page that the agent didn't make. They are recorded as they happen, and emptied into the next user message. */
 export type PageEvent =
   /** The user pressed the search button. */
-  | { kind: "search"; request: SearchRequest; count: number }
+  | { kind: "search"; request: SearchRequest; count: number; suggested?: boolean }
   /** The user pressed the undo button: what was undone, whose change it was, and where the page went back to. */
   | { kind: "undo"; reversed: Source; undone: SearchRequest; restored: SearchRequest }
   /**

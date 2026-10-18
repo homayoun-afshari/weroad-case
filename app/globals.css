@@ -215,6 +215,12 @@ button.primary {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
+.message-box.warning {
+  border-color: #c99a1f;
+  background: #fff6dd;
+  color: #6b4e00;
+}
+
 .message-box > div {
   flex: 1;
 }
@@ -271,6 +277,21 @@ h2 {
   margin: 4px 0 0;
   color: var(--muted);
   font-size: 14px;
+}
+
+.results .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #fff4d6;
+  color: #7a5b00;
+  font-size: 12px;
 }
 
 .empty {

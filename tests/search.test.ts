@@ -30,7 +30,18 @@ describe("search function", () => {
     expect(JSON.parse(JSON.stringify(output))).toEqual(output);
   });
 
-  it("returns no results when nothing matches (the suggester comes in block 5)", () => {
-    expect(search({ text: "hiking in Argentina under 2000" }).results).toEqual([]);
+  it("returns the nearest options when nothing matches, each with the state that found it", () => {
+    const { originalState, results } = search({ text: "hiking in Argentina under 2000" });
+    expect(results.length).toBeGreaterThan(0);
+    // Patagonia costs over 4,000: found with the price loosened
+    expect(results[0].trip.id).toBe(23);
+    expect(results[0].state).toEqual({ ...originalState, maxPrice: undefined });
+    expect(results[0].state.maxPrice).toBeUndefined();
+  });
+
+  it("keeps exact matches as they are, without suggestions", () => {
+    const { originalState, results } = search({ text: "northern lights" });
+    expect(results.map((r) => r.trip.id)).toEqual([9, 11, 41]);
+    expect(results.every((r) => r.state === originalState)).toBe(true);
   });
 });

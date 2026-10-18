@@ -5,6 +5,7 @@ import { ChatError, isAbort, postTurn } from "@/lib/chat/client";
 import { reportedAfterSend, setDraft } from "@/lib/chat/controls";
 import { searchEvent, undoEvent } from "@/lib/chat/events";
 import { firstMessage } from "@/lib/chat/firstMessage";
+import { DRAFT_WARNING, hasUnsentDraft } from "@/lib/chat/draft";
 import { answerHandOver, isAsking, isFrozen } from "@/lib/chat/handover";
 import { addUserMessage, recordEvent, withoutTrailingErrors } from "@/lib/chat/history";
 import type { ChatEntry } from "@/lib/chat/types";
@@ -24,6 +25,8 @@ export function SearchApp({ initial }: { initial: PageState }) {
   const [notice, setNotice] = useState<Notice | null>(null);
   const [entries, setEntries] = useState<ChatEntry[]>([]);
   const [thinking, setThinking] = useState(false);
+  // The chat message being written. (Not the draft of the controls: that one is recorded as a page event.)
+  const [chatDraft, setChatDraft] = useState("");
   const turn = useRef<AbortController | null>(null);
   // Whether the agent's last word on the controls is a draft that hasn't been searched
   const reported = useRef(false);
@@ -33,6 +36,12 @@ export function SearchApp({ initial }: { initial: PageState }) {
   // A chat that has ended takes no more page events
   const chatStarted = entries.length > 0 && !frozen;
   const dirty = isDirty(form, page.request);
+  // A chat message can be sent from the input unless it is locked (a turn runs, a question waits, the chat ended)
+  const canSend = chatStarted && !thinking && !isAsking(entries);
+  /** The search or the undo changed the page and left a chat message behind: say so (the message stays). */
+  const warnAboutDraft = () => {
+    if (hasUnsentDraft(chatDraft, canSend)) setNotice({ ...DRAFT_WARNING, kind: "warning" });
+  };
 
   // The message box closes by itself; a new message starts the timer again
   useEffect(() => {
@@ -54,6 +63,8 @@ export function SearchApp({ initial }: { initial: PageState }) {
       if (!response.ok) throw new Error(body.error ?? "The search failed. Please try again.");
       const next = body as PageState;
       setHistory((h) => push(h, next, "user"));
+      // The search ran as usual; if a chat message was left unsent, say so (the draft stays)
+      warnAboutDraft();
       // The chat shows what the user did on the page, and the agent learns it with the next message.
       // The search consumes a draft of the controls: its event carries the request.
       reported.current = false;
@@ -75,6 +86,7 @@ export function SearchApp({ initial }: { initial: PageState }) {
     const restored = current(undone.history);
     setHistory(undone.history);
     setForm(requestToForm(restored.request));
+    warnAboutDraft();
     // The controls now show the restored search, so a draft is gone
     reported.current = false;
     if (chatStarted) setEntries((e) => recordEvent(setDraft(e, null, false), undoEvent(page, restored, undone.reversed)));
@@ -156,10 +168,12 @@ export function SearchApp({ initial }: { initial: PageState }) {
       />
       <div className="layout">
         <main>
-          <ResultsList results={page.results} />
+          <ResultsList results={page.results} originalState={page.originalState} />
         </main>
         <ChatPanel
           entries={entries}
+          draft={chatDraft}
+          onDraft={setChatDraft}
           thinking={thinking}
           asking={isAsking(entries)}
           frozen={frozen}

@@ -25,10 +25,13 @@ describe("POST /api/search", () => {
     expect(page.results.every((r) => r.fromPrice <= 2000)).toBe(true);
   });
 
-  it("answers a search with no match with an empty list, not an error", async () => {
+  it("answers a search with no exact match with the nearest options, not an empty list or an error", async () => {
     const response = await post(JSON.stringify({ text: "hiking in Argentina under 2000" }));
     expect(response.status).toBe(200);
-    expect(((await response.json()) as PageState).results).toEqual([]);
+    const page = (await response.json()) as PageState;
+    expect(page.results[0].tripId).toBe(23);
+    expect(page.results[0].state.maxPrice).toBeUndefined();
+    expect(page.originalState.maxPrice).toBe(2000);
   });
 
   it("rejects a body that is not JSON, with a message for the user", async () => {

@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, type FormEvent } from "react";
 import { cardLine } from "@/lib/chat/cards";
 import type { ChatEntry } from "@/lib/chat/types";
 
 interface Props {
   entries: ChatEntry[];
+  /** The message being written, kept by the app: a search has to know whether one was left unsent. */
+  draft: string;
+  onDraft: (draft: string) => void;
   /** A turn is running: "Thinking…" shows, and the input is locked. */
   thinking: boolean;
   /** The hand-over question waits for an answer: the input stays locked until it has one. */
@@ -20,8 +23,7 @@ interface Props {
 }
 
 /** The chat: the start button before it starts; after, the messages, the page cards, the input and the control buttons. */
-export function ChatPanel({ entries, thinking, asking, frozen, onStart, onSend, onStop, onRetry, onHandOver }: Props) {
-  const [draft, setDraft] = useState("");
+export function ChatPanel({ entries, draft, onDraft, thinking, asking, frozen, onStart, onSend, onStop, onRetry, onHandOver }: Props) {
   const list = useRef<HTMLOListElement>(null);
 
   // Keep the newest message in view
@@ -51,7 +53,7 @@ export function ChatPanel({ entries, thinking, asking, frozen, onStart, onSend, 
     event.preventDefault();
     const text = draft.trim();
     if (!text || locked) return;
-    setDraft("");
+    onDraft("");
     onSend(text);
   };
 
@@ -107,7 +109,7 @@ export function ChatPanel({ entries, thinking, asking, frozen, onStart, onSend, 
           placeholder={placeholder}
           value={draft}
           disabled={locked}
-          onChange={(e) => setDraft(e.target.value)}
+          onChange={(e) => onDraft(e.target.value)}
         />
         <button type="submit" className="primary" disabled={locked || draft.trim() === ""}>
           Send

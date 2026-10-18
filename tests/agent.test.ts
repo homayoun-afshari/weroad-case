@@ -268,6 +268,11 @@ describe("which tool for what", () => {
     expect(prompt).toContain("The message has nothing to do with WeRoad: say you can't help with that here, and use no tool");
   });
 
+  it("says to call nearest options what they are, not matches", () => {
+    expect(prompt).toContain("When the page state says there are no exact matches, the results are the closest options");
+    expect(prompt).toContain("don't present them as matches");
+  });
+
   it("lets a departures answer list departures, and keeps the page's trips off the chat's lists", () => {
     expect(prompt).toContain("Don't list the trips on the page again, because the page shows them");
     expect(prompt).toContain("the departures that get_departures returns are the answer to a question about departures, so list those");

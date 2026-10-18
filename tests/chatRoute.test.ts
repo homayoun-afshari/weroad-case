@@ -1,3 +1,5 @@
+import { APICallError } from "ai";
+import { MockLanguageModelV4 } from "ai/test";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { POST } from "@/app/api/chat/route";
 import { getModel } from "@/lib/agent/model";
@@ -16,6 +18,14 @@ const post = (body: unknown) =>
 beforeEach(() => {
   vi.spyOn(console, "error").mockImplementation(() => {});
 });
+
+/** A model whose call fails with this error. */
+const failingModel = (error: unknown) =>
+  new MockLanguageModelV4({
+    doGenerate: async () => {
+      throw error;
+    },
+  });
 
 describe("POST /api/chat", () => {
   it("runs a turn and returns the new entries and the page", async () => {
@@ -53,19 +63,60 @@ describe("POST /api/chat", () => {
     expect(getModel).not.toHaveBeenCalled();
   });
 
-  it("answers a failed turn with a clear message and no internals", async () => {
+  it("answers a failure that retrying won't fix (a bad key, a missing setting) with a clear message and no internals", async () => {
     vi.mocked(getModel).mockImplementation(() => {
       throw new Error("ANTHROPIC_API_KEY is not set");
     });
     const response = await post({ entries, onScreen: [9, 11, 41] });
     expect(response.status).toBe(500);
-    expect(await response.json()).toEqual({ error: "The assistant couldn't answer. Please try again." });
+    expect(await response.json()).toEqual({ error: "The assistant isn't available right now. Please try again later." });
   });
 
-  it("answers a turn that ends without an answer in the same way", async () => {
+  it("answers a turn that ends without an answer with its own message", async () => {
     vi.mocked(getModel).mockReturnValue(mockModel(textReply("")));
     const response = await post({ entries, onScreen: [9, 11, 41] });
-    expect(response.status).toBe(500);
-    expect(await response.json()).toEqual({ error: "The assistant couldn't answer. Please try again." });
+    expect(response.status).toBe(502);
+    expect(await response.json()).toEqual({ error: "The assistant couldn't finish its answer. Please try again." });
+  });
+
+  it("says the assistant is busy when the provider is overloaded or rate limiting", async () => {
+    for (const statusCode of [429, 529]) {
+      vi.mocked(getModel).mockReturnValue(failingModel(new APICallError({ message: "secret overloaded detail", url: "x", requestBodyValues: {}, statusCode, isRetryable: false })));
+      const response = await post({ entries, onScreen: [9, 11, 41] });
+      expect(response.status).toBe(503);
+      expect(await response.json()).toEqual({ error: "The assistant is busy right now. Please try again in a moment." });
+    }
+  });
+
+  it("says the assistant took too long when the turn times out", async () => {
+    vi.mocked(getModel).mockReturnValue(failingModel(new DOMException("The operation was aborted due to timeout", "TimeoutError")));
+    const response = await post({ entries, onScreen: [9, 11, 41] });
+    expect(response.status).toBe(504);
+    expect(await response.json()).toEqual({ error: "The assistant took too long to answer. Please try again." });
+  });
+
+  it("logs the detail of a failure and sends none of it", async () => {
+    vi.mocked(getModel).mockReturnValue(failingModel(new APICallError({ message: "secret provider detail", url: "x", requestBodyValues: {}, statusCode: 401, isRetryable: false })));
+    const response = await post({ entries, onScreen: [9, 11, 41] });
+    expect(JSON.stringify(await response.json())).not.toContain("secret provider detail");
+    expect(console.error).toHaveBeenCalledWith("chat turn failed", expect.anything());
+  });
+
+  it("answers a stop with nothing and logs nothing: the user left", async () => {
+    const controller = new AbortController();
+    vi.mocked(getModel).mockReturnValue(
+      new MockLanguageModelV4({
+        doGenerate: (options) =>
+          new Promise((_, reject) => {
+            options.abortSignal?.addEventListener("abort", () => reject(options.abortSignal?.reason));
+          }) as never,
+      }),
+    );
+    const pending = POST(new Request("http://localhost/api/chat", { method: "POST", body: JSON.stringify({ entries, onScreen: [9, 11, 41] }), signal: controller.signal }));
+    setTimeout(() => controller.abort(), 40);
+    const response = await pending;
+    expect(response.status).toBe(499);
+    expect(await response.text()).toBe("");
+    expect(console.error).not.toHaveBeenCalled();
   });
 });

@@ -4,12 +4,14 @@ export const MESSAGE_BOX_MS = 6000;
 export interface Notice {
   title: string;
   body: string;
+  /** A warning is not an error: the search worked. Errors are the default. */
+  kind?: "warning";
 }
 
 /** Errors and warnings from the search controls, at the bottom of the app. */
 export function MessageBox({ notice, onClose }: { notice: Notice; onClose: () => void }) {
   return (
-    <div className="message-box" role="alert">
+    <div className={notice.kind === "warning" ? "message-box warning" : "message-box"} role="alert">
       <div>
         <strong>{notice.title}</strong>
         <p>{notice.body}</p>

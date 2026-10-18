@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { describeFailure } from "@/lib/agent/errors";
 import { getModel } from "@/lib/agent/model";
 import { runTurn } from "@/lib/agent/turn";
 import type { ChatEntry } from "@/lib/chat/types";
@@ -34,7 +35,10 @@ export async function POST(request: Request) {
   try {
     return Response.json(await runTurn({ model: getModel(), entries, onScreen: parsed.data.onScreen, abortSignal: request.signal }));
   } catch (error) {
+    const failure = describeFailure(error, { aborted: request.signal.aborted });
+    // A stop is not a failure: the user left, and nothing needs an answer or a log line
+    if (!failure.log) return new Response(null, { status: failure.status });
     console.error("chat turn failed", error);
-    return Response.json({ error: "The assistant couldn't answer. Please try again." }, { status: 500 });
+    return Response.json({ error: failure.message }, { status: failure.status });
   }
 }
