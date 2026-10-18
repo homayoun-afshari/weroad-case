@@ -156,7 +156,7 @@ export function SearchApp({ initial }: { initial: PageState }) {
       />
       <div className="layout">
         <main>
-          <ResultsList results={page.results} />
+          <ResultsList results={page.results} originalState={page.originalState} />
         </main>
         <ChatPanel
           entries={entries}

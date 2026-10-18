@@ -1,4 +1,4 @@
-import { formatPrice } from "@/lib/page/format";
+import { describeDays, formatPrice, plural } from "@/lib/page/format";
 import { isSuggested } from "@/lib/page/suggested";
 import { loosenedKeys, type LoosenKey } from "@/lib/search/loosening";
 import type { PageState } from "@/lib/page/types";
@@ -7,13 +7,6 @@ import type { PageEvent } from "./types";
 
 /** How many results the page state lists; the rest are counted, so a long list doesn't weigh on every turn. */
 const MAX_LISTED = 10;
-
-export const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
-
-function describeDays({ min, max }: { min?: number; max?: number }): string {
-  if (min !== undefined && max !== undefined) return `${min} to ${max} days`;
-  return min !== undefined ? `at least ${plural(min, "day")}` : `at most ${plural(max!, "day")}`;
-}
 
 /** The filters that are set, in words: `max price €2,000`, `dates: 2026-12-01 to 2026-12-08`. */
 export function describeFilters(request: SearchRequest): string[] {

@@ -273,6 +273,21 @@ h2 {
   font-size: 14px;
 }
 
+.results .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #fff4d6;
+  color: #7a5b00;
+  font-size: 12px;
+}
+
 .empty {
   margin-top: 20px;
   color: var(--muted);

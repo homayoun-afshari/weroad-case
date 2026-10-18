@@ -1,4 +1,5 @@
-import { describeRequest, plural } from "./blocks";
+import { plural } from "@/lib/page/format";
+import { describeRequest } from "./blocks";
 import type { PageEvent } from "./types";
 
 /** One line of a page changes card, in the user's voice: the same facts as the model's `<page_events>` line. */
