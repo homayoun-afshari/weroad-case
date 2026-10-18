@@ -38,3 +38,5 @@ export function bookableDepartures(trip: Trip): Departure[] {
 export const destinations = [...new Set(trips.map((t) => t.destination))].sort(
   (a, b) => b.length - a.length || a.localeCompare(b),
 );
+
+export const tripTypes = [...new Set(trips.flatMap((t) => t.travelTypes))];
