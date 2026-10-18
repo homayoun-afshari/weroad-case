@@ -1,17 +1,27 @@
 import { z } from "zod";
 
-/** The shape of a search request coming from outside the server: the search button, or the agent's tool. */
+/**
+ * The shape of a search request coming from outside the server: the search button, or the agent's
+ * tool. The descriptions are read by the model.
+ */
 export const searchRequestSchema = z.object({
-  text: z.string().max(200),
+  text: z
+    .string()
+    .max(200)
+    .describe(
+      'What the user searches for, in plain words, including destinations: "hiking in Argentina", "northern lights". Not prices or dates, which have their own fields. Empty for all trips.',
+    ),
   dates: z
     .object({ from: z.iso.date(), to: z.iso.date() })
     .refine((d) => d.from <= d.to, "The start date must not be after the end date.")
-    .optional(),
-  maxPrice: z.number().positive().optional(),
+    .optional()
+    .describe("Only trips with a departure fully inside this window. ISO dates (YYYY-MM-DD)."),
+  maxPrice: z.number().positive().optional().describe("The highest price in euros."),
   days: z
     .object({ min: z.number().int().positive().optional(), max: z.number().int().positive().optional() })
-    .optional(),
-  ageBand: z.enum(["18-25", "25-35", "25-49"]).optional(),
-  physicalRating: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
-  privateRoom: z.boolean().optional(),
+    .optional()
+    .describe("The length of the trip in days."),
+  ageBand: z.enum(["18-25", "25-35", "25-49"]).optional().describe("The age band of the departure."),
+  physicalRating: z.enum(["LOW", "MEDIUM", "HIGH"]).optional().describe("How physically demanding the trip is."),
+  privateRoom: z.boolean().optional().describe("Only departures where a private room can be booked."),
 });
