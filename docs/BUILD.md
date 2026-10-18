@@ -1,6 +1,6 @@
 # Build
 
-This is the record of how I built the prototype: what each step of my plan held, the issues I met and how I settled them, the errors and warnings the prototype handles on purpose, and what comes next. The design and the reasons for my choices are in `DESIGN.md`. The codes ("choice A", "next step B", "suggestion A") point there and to the [Notes](#5-notes) at the end of this file; a "choice" is always one of `DESIGN.md`.
+This is the record of how the prototype was built: what each step of my plan held, the issues I met and how I settled them, the errors and warnings the prototype handles on purpose, and what comes next. The design and the reasons for my choices are in `DESIGN.md`. The codes ("choice A", "next step B", "suggestion A") point there and to the [Notes](#5-notes) at the end of this file; a "choice" is always one of `DESIGN.md`.
 
 **References to the brief.** The brief is the PDF "WeRoad take-home case - The assistant on the search page". It is not in this repository, so a reference is a location, not a link: "_Brief: §3 (p. 2), "Starts from the page"_" means section 3, on page 2, the bullet with that title. Sections 1 and 2 are on page 1, section 3 and the start of section 4 on page 2, and the rest of section 4 on page 3.
 
@@ -10,6 +10,8 @@ This is the record of how I built the prototype: what each step of my plan held,
 
 ## 1. Implementation
 
+**How it was built.** I wrote the design (`DESIGN.md`) and chose the test cases from its business rules and the data's traps. A coding agent wrote the code and the unit tests to that spec, one step per commit. I reviewed each step, tested it by hand and ran the live eval; the issues below say which came from my reviews.
+
 I worked in blocks. Each block has its own branch, `block-N-name`, and one pull request that I merged before the next block began, so each branch started from the merged `main`. Each step is one commit, and the commit message and its short hash are given with the step. Every step left `npm test` and `npm run typecheck` green, and every block ended with the production build. I developed on `claude-haiku-5-5`, the cheapest capable model, and mocked the model in every unit test. Versions are pinned exactly, and the key lives in `.env.local` (`.env.example` is committed).
 
 ### Block 0. Setup · `main`
@@ -18,7 +20,7 @@ Next.js, React, TypeScript, the Vercel AI SDK with its Anthropic provider, Zod a
 
 ### Block 1. Search function · `block-1-search`
 
-The part with the most business rules, so the part I tested hardest, on the real data (53 tests). It is described in `SEARCH_FUNCTION.md`, and `SEARCH_FUNCTION.svg` shows the plan beside the build. _Brief: §3 (p. 2), "Searches like the page does"._
+The part with the most business rules, so the part tested hardest, on the real data (53 tests). It is described in `SEARCH_FUNCTION.md`, and `SEARCH_FUNCTION.svg` shows the plan beside the build. _Brief: §3 (p. 2), "Searches like the page does"._
 
 | Step | Commit                                             | What it holds                                                                                                                                                                                                                                  |
 | ---- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -86,12 +88,8 @@ Two kinds of cases, because a mocked model can't show that the right tool is cho
 
 | Step | Commits                                                                                                                                                                                                                                       | What it holds                                                                                                                                                                                                                                                                                  |
 | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 7.A  | `8b63bbd` Replace a promised hand-over in code; fix prompt and tool wording · `05ac252` Fix eval checks: FAQ guarantee case, stale-trip check · `802a517` Record the final live eval run · `ad7fb86` Render the assistant's markdown · `7ee24fe` Show the nearest departure in the dates tag · `a6e4a9c` Fix the controls size and scroll results and chat inside the page · `9ed25bc` Treat a repeated search as no change | Verification: the tests, the typecheck and the production build; the whole demo script by hand against the real model; the final live eval; eleven manual tests against the brief's practical requirements. Each fix is one commit.                                                           |
-| 7.B  | no commit                                                                                                                                                                                                                                     | The four gaps found by checking the design against the brief (product clicks, narrowing by words, risks, conversion) settled, and the list of where the build differs from my plan, recorded in the build log.                                                                              |
-
-### Block 9. README and rehearsal · `block-9-readme`
-
-The README (how to run, test and build it, a map of the repo, the life of one request, the cost of a live run) and a rehearsal of the thirty-minute walkthrough, out loud with the repo open, because the walkthrough is where I have to own the repo and its choices. `DESIGN.md` and this file are the longer documents behind it. _Brief: §4 (p. 3), "Time and format"._
+| 7.A  | `8b63bbd` Replace a promised hand-over in code; fix prompt and tool wording · `05ac252` Fix eval checks: FAQ guarantee case, stale-trip check · `802a517` Record the final live eval run · `ad7fb86` Render the assistant's markdown · `7ee24fe` Show the nearest departure in the dates tag · `a6e4a9c` Fix the controls size and scroll results and chat inside the page · `9ed25bc` Treat a repeated search as no change | Verification: the tests, the typecheck and the production build; the core loop by hand against the real model; the final live eval; eleven manual tests against the brief's practical requirements. Each fix is one commit.                                                           |
+| 7.B  | no commit                                                                                                                                                                                                                                     | The four gaps found by checking the design against the brief (product clicks, narrowing by words, risks, conversion) settled; where the build differs from my plan is shown in the three figures, the plan on the left and the build on the right.                                                                              |
 
 At the end of block 7 the prototype has 360 tests passing, a clean typecheck, a production build, and a live eval of 22 cases.
 
@@ -99,7 +97,7 @@ At the end of block 7 the prototype has 360 tests passing, a clean typecheck, a 
 
 Every issue I logged while building, in build order. Each has four parts.
 
-- **Source:** where in the build it showed up, and how: an _implementation challenge_ (found while writing the code), a _test_ (the unit tests or the offline eval cases), a _live run_ (the real model, in the live eval or by hand), or a _review_ (the developer's, or the manual tests).
+- **Source:** where in the build it showed up, and how: an _implementation challenge_ (found while building), a _test_ (the unit tests or the offline eval cases), a _live run_ (the real model, in the live eval or by hand), or a _review_ (my review of a step, or my manual tests).
 - **Issue:** what it is, without needing the brief.
 - **Settlement:** how it was resolved.
 - **Scope:** what it was about: the _conceptual design_ (a shortcoming or a gap in the plan), the _system prompt_ (or a tool description, which the model reads too), the _implementation logic_, the _evaluation_ (the checks themselves), the _data_, or _tooling and process_.
@@ -143,34 +141,34 @@ Every issue I logged while building, in build order. Each has four parts.
 
 ### Block 2
 
-**6. Scripts and shell commands that broke, not the app**
+**6. Check scripts that broke, not the app**
 
 - **Source:** steps 2.C, 3.D and others, implementation challenges.
-- **Issue:** long shell heredocs that failed on quoting before writing anything; browser check scripts that were wrong (a request handler registered twice, the `disabled` property read inside a disabled fieldset, a script written to a mistyped path, a placeholder file left in the workspace root).
-- **Settlement:** multi-line files are written with the file tool, never a long heredoc; each wrong check was fixed and run again, and the product turned out to be right every time. I wrote each of these down instead of hiding them.
+- **Issue:** some of the coding agent's browser check scripts were wrong (a request handler registered twice, the `disabled` property read inside a disabled fieldset), so a check failed while the app was right.
+- **Settlement:** each wrong check was fixed and run again, and the app turned out to be right every time.
 - **Scope:** tooling and process.
 
 ### Block 3
 
 **7. The page and the chat could disagree after the user used the page**
 
-- **Source:** the review of step 3.B, raised by the developer.
+- **Source:** my review of step 3.B.
 - **Issue:** the first assistant message says "3 trips". If the user ignores the chat and searches on the page, the page shows 1 trip while the message still says 3. My plan said page changes reach the agent without showing in the chat.
 - **Settlement:** page changes show in the chat as cards: one card for each run of events, written in the user's voice ("You searched … → 2 trips"), no model call, and the source of the `<page_events>` block of the next user message. The first message stays true to when it was written.
 - **Scope:** conceptual design: a shortcoming of the plan. _Brief: §2 (p. 1), the A/B lesson; §3 (p. 2), "Drives the page"._
 
 **8. Does the model accept a conversation that starts with the code-written assistant message?**
 
-- **Source:** step 3.A follow-up, a test I ran on the real model because the documentation doesn't say.
+- **Source:** step 3.A follow-up, a test on the real model, because the documentation doesn't say.
 - **Issue:** the first message of the chat is written by code, so the conversation sent to the model could begin with an assistant message.
 - **Settlement:** accepted by this model. The real rule is the other end: the conversation must end with a user message, because the model refuses assistant prefill. The chat route answers 400 when it doesn't, and the first assistant message is still left out of the model's input, which keeps the conversation valid on models that do reject it.
 - **Scope:** implementation logic (an API constraint). _Brief: §3 (p. 2), "Starts from the page"._
 
-**9. The SDK did not behave as I remembered**
+**9. The SDK did not behave as the coding agent assumed**
 
-- **Source:** step 3.C, an implementation challenge, found by reading the installed documentation and checking with the mock model.
-- **Issue:** the result of a turn's `response.messages` holds only the last step, so using it would have silently dropped every tool call and result. The names also differed from my memory (`instructions` for the system prompt, `isStepCount` for the step limit).
-- **Settlement:** the turn's messages are the messages of all its steps together, and I follow the installed documentation, not memory.
+- **Source:** step 3.C, an implementation challenge, found by reading the installed documentation and checking with a mocked model.
+- **Issue:** the result of a turn's `response.messages` holds only the last step, so using it would have silently dropped every tool call and result. The names also differed from the ones the agent assumed (`instructions` for the system prompt, `isStepCount` for the step limit).
+- **Settlement:** the turn's messages are the messages of all its steps together, and the code follows the installed documentation, not memory.
 - **Scope:** implementation logic.
 
 **10. The live model showed internal trip ids**
@@ -182,7 +180,7 @@ Every issue I logged while building, in build order. Each has four parts.
 
 **11. Control changes that weren't searched were invisible to the agent**
 
-- **Source:** the review of step 3.D, raised by the developer.
+- **Source:** my review of step 3.D.
 - **Issue:** a user who changes the controls but doesn't press Search and then writes to the chat leaves no trace: the page state is only what was searched, so the agent never learns of the edit, and its own search overwrites it.
 - **Settlement:** a change in the controls is a third page event (only the last state is kept, never every keystroke), shown as a line in the card and given to the agent; a "Discard changes" button puts the controls back to the page's search without touching the undo history. Commit `98e4348`.
 - **Scope:** conceptual design: a shortcoming of the plan. _Brief: §3 (p. 2), "Starts from the page" ("the applied filters")._
@@ -241,13 +239,13 @@ Every issue I logged while building, in build order. Each has four parts.
 **19. A hand-over turn that ended with no answer**
 
 - **Source:** step 4.C, a live run: "Do I need a visa?" failed with "The agent ended its turn without an answer" in 6 of 14 tries.
-- **Issue:** after the `hand_over` result the model often ends with an empty step, having written its sentence in the step that made the call, and my code looked only at the last step.
+- **Issue:** after the `hand_over` result the model often ends with an empty step, having written its sentence in the step that made the call, and the code looked only at the last step.
 - **Settlement:** `hand_over` ends the turn, so there is no final step to be empty (and one fewer model call). In general the answer is the text of the last step that has any. A hand-over turn needs no sentence, since the question is the proposal.
 - **Scope:** implementation logic. _Brief: §1 (p. 1), "hands over to a human agent in Zendesk when it should"._
 
 **20. How the hand-over works in a prototype**
 
-- **Source:** step 4.C, a review by the developer.
+- **Source:** step 4.C, my review.
 - **Issue:** the input while the question waits, what "no" means, whether the agent may offer again, and who takes over after "yes".
 - **Settlement:** the input stays locked until the user answers. "Yes" is a practical halt, with nobody planned to take over (the real one is next step B); "no" replaces the card with the fact that the user said no, and the conversation goes on. The question is the proposal itself: it appears when the user asks for a person or when the agent can't answer.
 - **Scope:** conceptual design: the stub was specified loosely. _Brief: §1 (p. 1), "hands over to a human agent in Zendesk when it should"; next step B._
@@ -291,21 +289,21 @@ Every issue I logged while building, in build order. Each has four parts.
 
 **26. The tags and the banner**
 
-- **Source:** step 5.B (a review), then step 7.A (a manual test by the developer).
+- **Source:** step 5.B (a review), then step 7.A (my manual test).
 - **Issue:** the tag for loosened dates ("no departure inside your dates") gave no sign of how close the trip was, while the other tags state the result's own value next to what was asked ("€4,169 · above your €2,000").
 - **Settlement:** the banner "No exact matches. Closest options:" replaces the count above the results. The dates tag now names the trip's nearest bookable departure: "nearest departure 20–27 Oct · outside your 19–24 Oct".
 - **Scope:** conceptual design and implementation: the plan's example covered only the price tag. _Brief: §3 (p. 2), "Never a dead end" ("the nearest options and the reason")._
 
 **27. A failed tool leaked its message, and one error message was not enough**
 
-- **Source:** step 5.C: probes with the mock model, then the real server with a wrong key.
+- **Source:** step 5.C: checks with a mocked model, then the real server with a wrong key.
 - **Issue:** a tool that throws gives the model the raw exception text, and a timeout, an overloaded provider and a bad key call for different words to the user.
 - **Settlement:** one function, `describeFailure`, maps each failure to a status and a message written for the user, and none leaks a detail (see [Handled Errors](#3-handled-errors)); every tool is guarded, and a failed `search_trips` leaves the page as it was; a stop is silent and not logged. Checked live: wrong key, a real stop, a failing tool.
 - **Scope:** implementation logic: the design's Errors section did not list the causes. _Brief: §3 (p. 2), "Never a dead end" ("it degrades gracefully and says so")._
 
 **28. The warning for an unsent chat message, after an undo**
 
-- **Source:** step 5.D, a review by the developer.
+- **Source:** step 5.D, my review.
 - **Issue:** my plan named only a search as the moment to warn, but an undo also changes the page while a message waits in the input.
 - **Settlement:** the warning shows after a successful search and after an undo, not after "Discard changes" (nothing changed on the page). A failed search shows its error instead, and the message is kept either way.
 - **Scope:** conceptual design: choice O named only the search. _Brief: §2 (p. 1), the A/B lesson ("help the page, not replace it")._
@@ -319,7 +317,7 @@ Every issue I logged while building, in build order. Each has four parts.
 - **Settlement:** strict: the page as it is after the turn, what the tools returned this turn, the user's own words, and today's date (the system prompt states it). A derived figure counts as not stated and is reviewed by hand. The checks are patterns in code, not a model judge.
 - **Scope:** evaluation. _Brief: §4 (p. 2), "how you would evaluate it before shipping"._
 
-**30. Faults in my own checks**
+**30. Faults in the eval's own checks**
 
 - **Source:** steps 6.B and 7.A, the live eval: reading the failures showed the check was wrong, not the model.
 - **Issue:** the "says nothing matches exactly" pattern was too narrow ("I didn't find an exact match", "No Japan trip matches"); today's date was flagged as an ungrounded date; the New Year's Eve case demanded a search where looking at departures is as defensible; the date pattern read the end of a year as the start of a range ("2026 and 5 January" gave "26 January"); and the case that forbade a PayPal or Revolut guarantee for an unconfirmed booking was wrong, because the help center's article 4 says "a credit card, PayPal, or Revolut as a guarantee" while article 7 says only a card.
@@ -344,21 +342,21 @@ Every issue I logged while building, in build order. Each has four parts.
 
 **33. The assistant's markdown was shown as typed**
 
-- **Source:** step 7.A, a manual test by the developer.
+- **Source:** step 7.A, my manual test.
 - **Issue:** the assistant writes lists and bold text, and the chat showed `**Iceland**` and `- ` on one line.
 - **Settlement:** a small component renders paragraphs, lists and bold as React elements, never as HTML, so a message cannot add markup to the page. Tested with the model's own list and with a message containing markup.
 - **Scope:** implementation logic (the interface).
 
 **34. The controls changed size and the whole page scrolled**
 
-- **Source:** step 7.A, manual tests by the developer.
+- **Source:** step 7.A, my manual tests.
 - **Issue:** the filters wrapped, and a date input grows once it is filled, so the controls changed height while typing; the window scrolled as a whole, and the chat sat at a fixed height.
 - **Settlement:** the filters are one grid row of fixed columns. The app is as tall as the window; the controls keep their height, and the results and the chat share the rest at two to one, each scrolling inside its own pane. A narrow window stacks the parts and scrolls as a whole.
 - **Scope:** implementation logic (the layout).
 
 **35. Searching the same request again added an undo step**
 
-- **Source:** step 7.A, a manual test by the developer.
+- **Source:** step 7.A, my manual test.
 - **Issue:** pressing Search with the controls the chat had just set changed nothing on the page, yet Undo then "went back" to the same state.
 - **Settlement:** a search that repeats the page's search is not a change: no history step, no card, no warning, and the same for the agent's searches.
 - **Scope:** implementation logic: a history rule the design didn't state. _Brief: §3 (p. 2), the measure "how often users undo what it did"._
@@ -368,7 +366,7 @@ Every issue I logged while building, in build order. Each has four parts.
 **36. A first push without an upstream**
 
 - **Source:** step 4.D, the push of block 4.
-- **Issue:** the commands I gave ended with a plain `git push`, which fails for a branch that has never been pushed, so the pull request failed too ("No commits between main and block-4-tools"). Nothing was lost.
+- **Issue:** the push commands the coding agent gave me ended with a plain `git push`, which fails for a branch that has never been pushed, so the pull request failed too ("No commits between main and block-4-tools"). Nothing was lost.
 - **Settlement:** `git push --set-upstream origin <branch>` for the first push of a branch; a plain push only after.
 - **Scope:** tooling and process.
 
@@ -488,5 +486,3 @@ Changes on WeRoad's side that the prototype points to.
 - **A smaller assistant.** The translator and the suggester would leave the assistant's code.
 
 **B. One wording for sales statuses.** The FAQ explains an "Open to book" status that doesn't exist in the data, which has seven statuses of its own. One table from sales status to what the user is told, used by the site, the chatbot and the FAQ, keeps every channel saying the same thing. _Brief: §2 (p. 1), the same-question-different-answers bullet._
-
-**C. FAQ gaps from unanswered questions.** There is no FAQ on visas, and 15 trip destinations have no destination FAQ. Every hand-over and every "I don't know" is a question the FAQ didn't cover; counting them by topic shows which articles to write first. _Brief: §3 (p. 2), "Picks the right tool" ("'do I need a visa?' is a FAQ")._
