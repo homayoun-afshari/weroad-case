@@ -20,4 +20,9 @@ export type ChatEntry =
   | { kind: "assistant"; text: string }
   /** The assistant's tool calls and the tool results of one turn, as the AI SDK holds them. */
   | { kind: "tools"; messages: ModelMessage[] }
+  /**
+   * A page changes card: the page events of one run, shown in the chat. The model never reads it
+   * directly; its events go into the `blocks` of the user message that follows.
+   */
+  | { kind: "page"; events: PageEvent[] }
   | { kind: "error"; text: string };

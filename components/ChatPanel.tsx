@@ -21,7 +21,7 @@ export function ChatPanel({ entries, onStart }: Props) {
     <aside className="chat" aria-label="Assistant">
       <ol className="messages">
         {entries.map((entry, i) =>
-          entry.kind === "tools" ? null : (
+          entry.kind === "tools" || entry.kind === "page" ? null : (
             <li key={i} className={entry.kind}>
               {entry.text}
             </li>

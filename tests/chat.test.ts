@@ -2,7 +2,7 @@ import type { ModelMessage } from "ai";
 import { describe, expect, it } from "vitest";
 import { describeEvent, describeRequest, pageBlocks, pageStateBlock } from "@/lib/chat/blocks";
 import { searchEvent, undoEvent } from "@/lib/chat/events";
-import { toModelMessages, userEntry } from "@/lib/chat/history";
+import { addUserMessage, recordEvent, toModelMessages, userEntry } from "@/lib/chat/history";
 import type { ChatEntry } from "@/lib/chat/types";
 import { pageStateFor } from "@/lib/page/view";
 
@@ -146,5 +146,47 @@ describe("model messages", () => {
       userEntry("hello again", [], northern),
     ];
     expect(toModelMessages(entries).map((m) => m.role)).toEqual(["user", "user"]);
+  });
+});
+
+describe("page change cards", () => {
+  const search = searchEvent(northern);
+  const undo = undoEvent(northern, pageStateFor({ text: "northern lights" }), "assistant");
+
+  it("start a card for the first event after a message", () => {
+    const entries = recordEvent([{ kind: "assistant", text: "Hi." }], search);
+    expect(entries).toEqual([{ kind: "assistant", text: "Hi." }, { kind: "page", events: [search] }]);
+  });
+
+  it("collect a run of events in one card", () => {
+    const entries = recordEvent(recordEvent([{ kind: "assistant", text: "Hi." }], search), undo);
+    expect(entries).toHaveLength(2);
+    expect(entries[1]).toEqual({ kind: "page", events: [search, undo] });
+  });
+
+  it("start a new card after the next message and its answer", () => {
+    let entries: ChatEntry[] = recordEvent([{ kind: "assistant", text: "Hi." }], search);
+    entries = addUserMessage(entries, "thanks", northern);
+    entries = [...entries, { kind: "assistant", text: "You're welcome." }];
+    entries = recordEvent(entries, undo);
+    expect(entries.map((e) => e.kind)).toEqual(["assistant", "page", "user", "assistant", "page"]);
+    expect(entries[1]).toEqual({ kind: "page", events: [search] });
+  });
+
+  it("put the events of the card before a message into that message's page context", () => {
+    const entries = addUserMessage(recordEvent([{ kind: "assistant", text: "Hi." }], search), "thanks", northern);
+    expect(entries.at(-1)).toEqual(userEntry("thanks", [search], northern));
+  });
+
+  it("add no page events to a message that has no card before it", () => {
+    const entries = addUserMessage([{ kind: "assistant", text: "Hi." }], "thanks", northern);
+    expect(entries.at(-1)).toEqual(userEntry("thanks", [], northern));
+  });
+
+  it("are not sent to the model", () => {
+    const entries = addUserMessage(recordEvent([{ kind: "assistant", text: "Hi." }], search), "thanks", northern);
+    const messages = toModelMessages(entries);
+    expect(messages).toHaveLength(1);
+    expect(JSON.stringify(messages)).toContain("<page_events>");
   });
 });
