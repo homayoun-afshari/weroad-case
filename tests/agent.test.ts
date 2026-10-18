@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { SYSTEM_PROMPT } from "@/lib/agent/prompt";
+import { HAND_OVER_OFFER } from "@/lib/agent/promise";
 import { MAX_STEPS, runTurn, TurnError } from "@/lib/agent/turn";
 import { addUserMessage } from "@/lib/chat/history";
 import type { ChatEntry } from "@/lib/chat/types";
@@ -207,6 +208,20 @@ describe("a turn that can't answer", () => {
     expect(result.entries[1]).toEqual({ kind: "handover", answer: "asked" });
   });
 
+  it("replaces a sentence that promises the connection with the offer: only the user's yes can start it", async () => {
+    // seen live in 3 of 3 runs of "I want to talk to a person"
+    const model = mockModel(sayAndCall("I'll connect you with a human agent right away.", "hand_over", {}));
+    const result = await runTurn({ model, onScreen, entries: asked("I want to talk to a person") });
+    expect(result.entries.map((e) => e.kind)).toEqual(["tools", "assistant", "handover"]);
+    expect(result.entries[1]).toEqual({ kind: "assistant", text: HAND_OVER_OFFER });
+  });
+
+  it("leaves a promising sentence alone when no hand-over is offered", async () => {
+    const model = mockModel(textReply("I'll connect the dots: Iceland is the cheapest."));
+    const result = await runTurn({ model, onScreen, entries: asked("which is cheapest?") });
+    expect(result.entries.at(-1)).toEqual({ kind: "assistant", text: "I'll connect the dots: Iceland is the cheapest." });
+  });
+
   it("shows the sentence written with a tool call when the model ends with an empty step", async () => {
     // seen live: after a tool result the model sometimes ends with nothing, having written its sentence with the call
     const model = mockModel(sayAndCall("Searching for Iceland.", "search_trips", { text: "iceland" }), emptyReply());
@@ -303,5 +318,17 @@ describe("a turn that asks for an itinerary", () => {
     const model = mockModel(toolCall("get_itinerary", { tripId: 3 }), textReply("That trip isn't on the page."));
     await runTurn({ model, onScreen, entries: asked("and Morocco's plan?") });
     expect(JSON.stringify(model.doGenerateCalls[1].prompt)).toContain("Trip 3 is not on the page.");
+  });
+});
+
+describe("what the model is told about destinations and dropped trips", () => {
+  it("asks for the country as WeRoad names it, so 'USA' becomes United States (the search itself maps no abbreviations)", async () => {
+    const model = mockModel(textReply("Hello."));
+    await runTurn({ model, onScreen, entries: asked("hello") });
+    expect(JSON.stringify(model.doGenerateCalls[0].tools)).toContain('write \\"United States\\", not \\"USA\\"');
+  });
+
+  it("lets the answer say which trips dropped off and why, but not list or price them", () => {
+    expect(SYSTEM_PROMPT).toContain("you may say which trips dropped off and why, without their prices");
   });
 });
