@@ -78,20 +78,24 @@ function view(d: Departure): DepartureView {
 
 const inside = (d: Departure, w: { from: string; to: string }) => d.startingDate >= w.from && d.endingDate <= w.to;
 
+/**
+ * How many days a departure sticks out of a window: 0 when it lies inside it; else the days it
+ * starts before the window opens, the days it starts after the window ends, or (when it starts
+ * inside and ends after) the days it ends after the window ends.
+ */
+export function outsideBy(d: Departure, w: { from: string; to: string }): number {
+  if (inside(d, w)) return 0;
+  if (d.startingDate < w.from) return days(d.startingDate, w.from);
+  return d.startingDate > w.to ? days(w.to, d.startingDate) : days(w.to, d.endingDate);
+}
+
 /** The bookable departure that sticks out of the window the least on one side. */
 function nearest(candidates: Departure[], w: { from: string; to: string }, side: "before" | "after"): OutsideWindow | null {
   const scored = candidates.map((d) => {
-    if (side === "before") {
-      const n = days(d.startingDate, w.from);
-      return { d, n, how: `starts ${plural(n)} before the window opens` };
-    }
+    const n = outsideBy(d, w);
+    if (side === "before") return { d, n, how: `starts ${plural(n)} before the window opens` };
     // After: it starts after the window ends, or starts inside it and ends after it
-    if (d.startingDate > w.to) {
-      const n = days(w.to, d.startingDate);
-      return { d, n, how: `starts ${plural(n)} after the window ends` };
-    }
-    const n = days(w.to, d.endingDate);
-    return { d, n, how: `ends ${plural(n)} after the window ends` };
+    return { d, n, how: `${d.startingDate > w.to ? "starts" : "ends"} ${plural(n)} after the window ends` };
   });
   scored.sort((a, b) => a.n - b.n);
   return scored[0] ? { ...view(scored[0].d), how: scored[0].how } : null;

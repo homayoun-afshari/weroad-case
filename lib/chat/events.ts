@@ -1,9 +1,10 @@
 import type { PageState, Source } from "@/lib/page/types";
+import { isSuggested } from "@/lib/page/suggested";
 import type { PageEvent } from "./types";
 
 /** The user pressed the search button and the page now shows `page`. */
 export function searchEvent(page: PageState): PageEvent {
-  return { kind: "search", request: page.request, count: page.results.length };
+  return { kind: "search", request: page.request, count: page.results.length, suggested: isSuggested(page) };
 }
 
 /** The user pressed the undo button: `undone` was on the page, `restored` is on it now. */

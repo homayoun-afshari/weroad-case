@@ -35,7 +35,9 @@ describe("page events", () => {
   it("records a search with how many results came back", () => {
     expect(describeEvent(searchEvent(northern))).toBe('user searched "northern lights" · max price €2,000 (2 results)');
     expect(describeEvent(searchEvent(pageStateFor({ text: "iceland" })))).toContain("(1 result)");
-    expect(describeEvent(searchEvent(pageStateFor({ text: "hiking in Argentina", maxPrice: 2000 })))).toContain("(0 results)");
+    // nothing matches exactly, so the page shows the nearest options
+    expect(describeEvent(searchEvent(pageStateFor({ text: "hiking in Argentina", maxPrice: 2000 })))).toContain("(no exact matches, 6 closest options)");
+    expect(describeEvent({ kind: "search", request: { text: "x" }, count: 0 })).toContain("(0 results)");
   });
 
   it("records an undo with whose change it reversed, what was undone and where the page went back to", () => {
@@ -60,7 +62,11 @@ describe("page state block", () => {
   });
 
   it("says when there are no results, and when dates are set", () => {
-    const empty = pageStateFor({ text: "hiking in Argentina", maxPrice: 2000, dates: { from: "2026-12-01", to: "2026-12-08" } });
+    // the search function never returns none while a trip can be booked; the block still has to say so
+    const empty = {
+      ...pageStateFor({ text: "iceland", dates: { from: "2026-12-01", to: "2026-12-08" } }),
+      results: [],
+    };
     const block = pageStateBlock(empty);
     expect(block).toContain("results (0): none");
     expect(block).toContain("dates: 2026-12-01 to 2026-12-08");
@@ -209,5 +215,36 @@ describe("history sent for a turn", () => {
 
   it("handles an empty history", () => {
     expect(withoutTrailingErrors([])).toEqual([]);
+  });
+});
+
+describe("page state block when the results are the nearest options", () => {
+  it("says there are no exact matches and what was loosened for each trip", () => {
+    const block = pageStateBlock(pageStateFor({ text: "hiking in Argentina", maxPrice: 2000 }));
+    expect(block).toContain("no exact matches: the page shows the closest options instead, each with what was loosened");
+    expect(block).toContain("#23 Argentina (13 days, from €4,169, loosened: max price €2,000)");
+    expect(block).toContain("loosened: destinations Argentina)");
+  });
+
+  it("says nothing of the sort when the results match", () => {
+    const block = pageStateBlock(pageStateFor({ text: "northern lights" }));
+    expect(block).not.toContain("no exact matches");
+    expect(block).not.toContain("loosened");
+  });
+});
+
+describe("what was loosened, with the value asked", () => {
+  it("names the words, so the agent knows which ones found nothing", () => {
+    const block = pageStateBlock(pageStateFor({ text: "hiking in Brazil or Argentina end of September" }));
+    expect(block).toContain('loosened: the words "hiking brazil end september"');
+  });
+
+  it("names the words that found nothing, the dates, and several values together in the fixed order", () => {
+    const words = pageStateBlock(pageStateFor({ text: "northern lights in Brazil" }));
+    expect(words).toContain('loosened: the words "brazil"');
+    const dates = pageStateBlock(pageStateFor({ text: "", dates: { from: "2026-10-19", to: "2026-10-24" } }));
+    expect(dates).toContain("loosened: dates: 2026-10-19 to 2026-10-24");
+    const both = pageStateBlock(pageStateFor({ text: "iceland", dates: { from: "2026-10-19", to: "2026-10-24" }, maxPrice: 500 }));
+    expect(both).toContain("loosened: dates: 2026-10-19 to 2026-10-24 and max price €500");
   });
 });

@@ -29,10 +29,18 @@ describe("first message", () => {
     );
   });
 
-  it("says so when the page shows no trips", () => {
+  it("says so when no trip matches and the page shows the nearest options", () => {
     expect(firstMessage(pageStateFor({ text: "hiking in Argentina", maxPrice: 2000 }))).toBe(
-      `The page shows no trips for "hiking in Argentina", max price €2,000. ${OFFER}`,
+      `No trip matches "hiking in Argentina", max price €2,000 exactly. The page shows the 6 closest options instead. They start from €289. ${OFFER}`,
     );
+    expect(firstMessage(pageStateFor({ text: "hiking in Brazil or Argentina end of September" }))).toBe(
+      `No trip matches "hiking in Brazil or Argentina end of September" exactly. The page shows the closest option instead. It starts from €4,169. ${OFFER}`,
+    );
+  });
+
+  it("says so when the page shows no trips at all", () => {
+    const none = { ...pageStateFor({ text: "iceland" }), results: [] };
+    expect(firstMessage(none)).toBe(`The page shows no trips for "iceland". ${OFFER}`);
   });
 
   it("states the cheapest price among the results shown, not among all trips", () => {

@@ -17,7 +17,10 @@ describe("card lines", () => {
   it("tell the user what they searched and what came back", () => {
     expect(cardLine(searchEvent(northern))).toBe('You searched "northern lights" · max price €2,000 → 2 trips');
     expect(cardLine(searchEvent(pageStateFor({ text: "iceland" })))).toContain("→ 1 trip");
-    expect(cardLine(searchEvent(pageStateFor({ text: "hiking in Argentina", maxPrice: 2000 })))).toContain("→ no trips");
+    expect(cardLine({ kind: "search", request: { text: "x" }, count: 0 })).toContain("→ no trips");
+    expect(cardLine(searchEvent(pageStateFor({ text: "hiking in Argentina", maxPrice: 2000 })))).toContain(
+      "→ no exact matches, 6 closest options",
+    );
   });
 
   it("tell the user what they undid", () => {
