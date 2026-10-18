@@ -7,7 +7,13 @@ export type PageEvent =
   /** The user pressed the search button. */
   | { kind: "search"; request: SearchRequest; count: number }
   /** The user pressed the undo button: what was undone, whose change it was, and where the page went back to. */
-  | { kind: "undo"; reversed: Source; undone: SearchRequest; restored: SearchRequest };
+  | { kind: "undo"; reversed: Source; undone: SearchRequest; restored: SearchRequest }
+  /**
+   * The search controls differ from the page's search and haven't been searched: `draft` is the request
+   * they describe. `null` means they are back to the page's search after the agent was told of a draft.
+   * Only the last one is kept.
+   */
+  | { kind: "controls"; draft: SearchRequest | null };
 
 /**
  * The chat history, oldest first. Only user messages, assistant messages and errors appear in the chat;

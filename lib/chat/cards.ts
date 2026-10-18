@@ -7,6 +7,11 @@ export function cardLine(event: PageEvent): string {
     const trips = event.count === 0 ? "no trips" : plural(event.count, "trip");
     return `You searched ${describeRequest(event.request)} → ${trips}`;
   }
+  if (event.kind === "controls") {
+    return event.draft
+      ? `You changed the controls (not searched yet): ${describeRequest(event.draft)}`
+      : "You put the controls back to the page's search";
+  }
   const whose = event.reversed === "assistant" ? "the assistant's change" : "your own change";
   return `You undid ${whose} (${describeRequest(event.undone)}), back to ${describeRequest(event.restored)}`;
 }

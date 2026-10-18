@@ -48,3 +48,23 @@ export function requestToForm(request: SearchRequest): FormValues {
     privateRoom: request.privateRoom ?? false,
   };
 }
+
+/** A request without the values that mean "not set", so two requests that search the same compare equal. */
+function canonical(request: SearchRequest): string {
+  const { text, dates, maxPrice, days, ageBand, physicalRating, privateRoom } = request;
+  const hasDays = days && (days.min !== undefined || days.max !== undefined);
+  return JSON.stringify({
+    text: text.trim(),
+    dates,
+    maxPrice,
+    days: hasDays ? { min: days.min, max: days.max } : undefined,
+    ageBand,
+    physicalRating,
+    privateRoom: privateRoom || undefined,
+  });
+}
+
+export const sameRequest = (a: SearchRequest, b: SearchRequest) => canonical(a) === canonical(b);
+
+/** The controls hold something that hasn't been searched: they describe a different request than the page's. */
+export const isDirty = (form: FormValues, request: SearchRequest) => !sameRequest(formToRequest(form), request);

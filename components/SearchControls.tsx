@@ -8,7 +8,10 @@ interface Props {
   onChange: (change: Partial<FormValues>) => void;
   onSearch: () => void;
   onUndo: () => void;
+  onDiscard: () => void;
   canUndo: boolean;
+  /** The controls hold something that hasn't been searched. */
+  dirty: boolean;
   /** A search from the button is running. */
   pending: boolean;
   /** The controls are locked: a search or a chat turn is running. */
@@ -16,7 +19,7 @@ interface Props {
 }
 
 /** The search bar, the search filters, and the undo and search buttons. */
-export function SearchControls({ form, onChange, onSearch, onUndo, canUndo, pending, locked }: Props) {
+export function SearchControls({ form, onChange, onSearch, onUndo, onDiscard, canUndo, dirty, pending, locked }: Props) {
   const submit = (event: FormEvent) => {
     event.preventDefault();
     onSearch();
@@ -35,6 +38,9 @@ export function SearchControls({ form, onChange, onSearch, onUndo, canUndo, pend
           />
           <button type="button" onClick={onUndo} disabled={!canUndo}>
             Undo
+          </button>
+          <button type="button" onClick={onDiscard} disabled={!dirty}>
+            Discard changes
           </button>
           <button type="submit" className="primary">
             {pending ? "Searching…" : "Search"}

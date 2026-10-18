@@ -35,6 +35,11 @@ export function describeEvent(event: PageEvent): string {
   if (event.kind === "search") {
     return `user searched ${describeRequest(event.request)} (${plural(event.count, "result")})`;
   }
+  if (event.kind === "controls") {
+    return event.draft
+      ? `user changed the controls but has not searched yet: ${describeRequest(event.draft)}`
+      : "user put the controls back to the page's search";
+  }
   const whose = event.reversed === "assistant" ? "the assistant's change" : "their own change";
   return `user undid ${whose} (${describeRequest(event.undone)}) and is back to ${describeRequest(event.restored)}`;
 }
