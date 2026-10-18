@@ -1,14 +1,17 @@
 import { loosenedKeys, type LoosenKey } from "@/lib/search/loosening";
 import type { SearchState } from "@/lib/search/types";
-import { describeDays, formatPrice } from "./format";
+import { describeDays, describeWindow, formatPrice } from "./format";
 import type { ResultView } from "./types";
 
 function tag(key: LoosenKey, original: SearchState, result: ResultView): string {
   switch (key) {
     case "maxPrice":
       return `${formatPrice(result.fromPrice)} · above your ${formatPrice(original.maxPrice!)}`;
-    case "dates":
-      return "no departure inside your dates";
+    case "dates": {
+      const asked = describeWindow(original.dates!.from, original.dates!.to);
+      const nearest = result.nearestDeparture;
+      return nearest ? `nearest departure ${describeWindow(nearest.from, nearest.to)} · outside your ${asked}` : `no departure inside your ${asked}`;
+    }
     case "days":
       return `${result.days} days · outside your ${describeDays(original.days!)}`;
     case "ageBand":

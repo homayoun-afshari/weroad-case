@@ -38,3 +38,18 @@ describe("page state for a search request", () => {
     expect(size).toBeLessThan(40_000);
   });
 });
+
+describe("the nearest departure of a result found with the dates loosened", () => {
+  const asked = { from: "2026-10-19", to: "2026-10-24" };
+
+  it("is the bookable departure nearest to the dates asked", () => {
+    const { results } = pageStateFor({ text: "iceland", dates: asked });
+    expect(results[0].nearestDeparture).toEqual({ from: "2026-10-20", to: "2026-10-27" });
+  });
+
+  it("is left out when the dates were not loosened or were not asked", () => {
+    expect(pageStateFor({ text: "iceland" }).results[0].nearestDeparture).toBeUndefined();
+    const exact = pageStateFor({ text: "", dates: asked, maxPrice: 800 }).results.filter((r) => r.state.dates);
+    for (const r of exact) expect(r.nearestDeparture).toBeUndefined();
+  });
+});

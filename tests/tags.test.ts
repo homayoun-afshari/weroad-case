@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { describeWindow } from "@/lib/page/format";
 import { resultTags } from "@/lib/page/tags";
 import { trips } from "@/lib/search/catalog";
 import type { ResultView } from "@/lib/page/types";
@@ -27,12 +28,14 @@ describe("the tags of a search result", () => {
   it("say when no departure is inside the dates", () => {
     const results = tagsOf({ text: "", dates: { from: "2026-10-19", to: "2026-10-24" } });
     expect(results).toHaveLength(10);
-    for (const r of results) expect(r.tags).toEqual(["no departure inside your dates"]);
+    // each tag names the trip's own nearest departure, and the window that was asked
+    for (const r of results) expect(r.tags).toEqual([expect.stringMatching(/^nearest departure \d{1,2}(?: \w{3})?(?: \d{4})?–\d{1,2} \w{3}(?: \d{4})? · outside your 19–24 Oct$/)]);
+    expect(results.find((r) => r.id === 9)?.tags).toEqual(["nearest departure 20–27 Oct · outside your 19–24 Oct"]);
   });
 
   it("say each value that was loosened, in the fixed order", () => {
     const [iceland] = tagsOf({ text: "iceland", dates: { from: "2026-10-19", to: "2026-10-24" }, maxPrice: 500 });
-    expect(iceland.tags).toEqual(["no departure inside your dates", "€1,219 · above your €500"]);
+    expect(iceland.tags).toEqual(["nearest departure 20–27 Oct · outside your 19–24 Oct", "€1,219 · above your €500"]);
   });
 
   it("say when the duration was loosened, with what was asked", () => {
@@ -63,5 +66,14 @@ describe("the tags of a search result", () => {
       "physical effort not applied (you asked low)",
       "private room not applied",
     ]);
+  });
+});
+
+describe("a window of dates in words", () => {
+  it("is short inside a month, and says both months or both years when it crosses them", () => {
+    expect(describeWindow("2026-10-20", "2026-10-27")).toBe("20–27 Oct");
+    expect(describeWindow("2026-10-31", "2026-11-06")).toBe("31 Oct–6 Nov");
+    expect(describeWindow("2026-12-28", "2027-01-04")).toBe("28 Dec 2026–4 Jan 2027");
+    expect(describeWindow("2026-10-24", "2026-10-24")).toBe("24 Oct");
   });
 });
